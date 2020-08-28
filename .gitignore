@@ -112,4 +112,4 @@ tags
 
 obj
 *.log
-minishell
+libexectree.a
