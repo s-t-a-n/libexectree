@@ -1,0 +1,6 @@
+[submodule "lib/libft"]
+	path = lib/libft
+	url = git@github.com:s-t-a-n/libft.git
+[submodule "lib/libvector"]
+	path = lib/libvector
+	url = git@github.com:s-t-a-n/libvector.git

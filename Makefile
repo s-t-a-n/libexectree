@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/08/25 18:14:12 by sverschu      ########   odam.nl          #
+#    Updated: 2020/08/28 19:31:21 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,19 +14,27 @@ NAME = libexecblocks.a
 
 # build variables
 
-# directories
+# directories ###############################################################
 SRC_D = src
 OBJ_D = obj
 INC_D = inc
+LIB_D = lib
 
-# C source and header files
+# source and header files ###################################################
 SRC =	$(SRC_D)/execblocks.c												\
+		$(SRC_D)/node.c														\
 
 INC =	$(INC_D)/execblocks.h												\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
-# output format
+# dependencies ##############################################################
+LIBFT=lib/libft/libft.a
+LIBVECTOR=lib/libvector/libvector.a
+LIB_INC= -I$(LIB_D)/libft/inc												\
+		 -I$(LIB_D)/libvector/inc											\
+
+# output format #############################################################
 CC_LOG=./.cc.log
 CC_ERROR=./.cc.error
 
@@ -39,20 +47,20 @@ OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
 
-# warriors of choice
+# warriors of choice ########################################################
 ECHO=printf
 CAT=cat
 
-# compiler and linker
+# compiler and linker #######################################################
 CC = clang
 LD = ar
 
-# compile, linker and test flags
+# compile, linker and test flags ############################################
 CC_FLAGS =	-Wall -Wextra -Werror
 LD_FLAGS =  -rcs
 T_FLAGS = 	-lcriterion
 
-# debugging or optimilization flags
+# debugging or optimilization flags #########################################
 CC_OPT_FLAGS = -O3															\
 			   -march=native
 
@@ -75,7 +83,7 @@ else
 	LD_FLAGS +=
 endif
 
-# os variables
+# os variables ##############################################################
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
     OS = LINUX
@@ -88,13 +96,13 @@ ifeq ($(UNAME_S),Darwin)
     LD_FLAGS +=
 endif
 
-# make commands
+# make commands #############################################################
 all: $(NAME)
 
 submodule:
 	@git submodule update --init --remote --recursive
 
-$(NAME): $(OBJ_D) $(OBJ) $(INC_D) $(INC)
+$(NAME): $(LIBFT) $(LIBVECTOR) $(OBJ_D) $(OBJ) $(INC_D) $(INC)
 	@$(ECHO) "Linking $(NAME)..."
 	@$(LD) $(LD_FLAGS) $(NAME) $(OBJ) 2>$(CC_LOG)
 	@if test -e $(CC_ERROR); then											\
@@ -111,7 +119,7 @@ $(OBJ_D):
 
 $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
-	@$(CC) $(CC_FLAGS) -I$(INC_D) -c $< -o $@ 2>$(CC_LOG) 					\
+	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG) 		\
 		|| touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then											\
 		$(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
@@ -122,14 +130,24 @@ $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
+$(LIBFT):
+	@make -C $(LIB_D)/libft
+
+$(LIBVECTOR):
+	@make -C $(LIB_D)/libvector
+
 clean:
 	@$(RM) $(OBJ)
 	@$(RM) -r $(NAME).dSYM
 	@$(RM) *.testbin
 	@$(RM) -r $(OBJ_D)
+	@make -C $(LIB_D)/libft clean || true
+	@make -C $(LIB_D)/libvector clean || true
 
 fclean: clean
 	@$(RM) $(NAME)
+	@make -C $(LIB_D)/libft fclean || true
+	@make -C $(LIB_D)/libvector fclean || true
 
 norm:
 	@norminette $(SRC) $(INC)
