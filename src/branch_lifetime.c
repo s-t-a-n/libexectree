@@ -1,28 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   execblocks_internal.h                              :+:    :+:            */
+/*   branch_lifetime.c                                  :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/08/25 18:17:02 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/08/25 19:27:20 by sverschu      ########   odam.nl         */
+/*   Created: 2020/08/28 19:57:39 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/08/28 20:08:40 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECBLOCKS_INTERNAL_H
-# define EXECBLOCKS_INTERNAL_H
+#include "exectree_internal.h"
 
-# include "execblocks.h"
-
-typedef struct		t_node
+t_node	*branch_destroy(t_node *root)
 {
-	// integer/function dispatch function variable;
-	// node parent
-	// node neighbour left
-	// node neighbour right
-	// vector of children
-	// vector of arguments
-}					s_node;
+	t_node	*node;
 
-#endif
+	if (!root->parent)
+	{
+		// ignore neighbours
+		while (*(size_t *)vector(&root->children, V_SIZE, 0, NULL) > 0)
+		{
+			node = vector(&root->children, V_PEEKBACK, 0, NULL);
+
+			free(node);
+			vector(&root->children, V_POPBACK, 0, NULL);
+		}
+	}
+	else
+	{
+
+	}
+	return (NULL);
+}

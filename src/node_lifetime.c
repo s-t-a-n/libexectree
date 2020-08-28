@@ -1,13 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   execblocks.c                                       :+:    :+:            */
+/*   node_lifetime.c                                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/08/25 18:14:31 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/08/25 18:14:33 by sverschu      ########   odam.nl         */
+/*   Created: 2020/08/28 19:46:11 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/08/28 19:55:23 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "exectree_internal.h"
 
+t_node		*node_new()
+{
+	t_node	*node;
+
+	node = ft_calloc(sizeof(t_node), 1);
+	if (node)
+	{
+
+	}
+	return (node);
+}
+
+t_node		*node_destroy(t_node *node)
+{
+	free (node->subject);
+	free (node);
+	return (NULL);
+}

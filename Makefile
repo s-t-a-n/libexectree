@@ -6,11 +6,11 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/08/28 19:31:21 by sverschu      ########   odam.nl          #
+#    Updated: 2020/08/28 19:57:50 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libexecblocks.a
+NAME = libexectree.a
 
 # build variables
 
@@ -21,10 +21,12 @@ INC_D = inc
 LIB_D = lib
 
 # source and header files ###################################################
-SRC =	$(SRC_D)/execblocks.c												\
-		$(SRC_D)/node.c														\
+SRC =	$(SRC_D)/exectree.c													\
+		$(SRC_D)/node_lifetime.c											\
+		$(SRC_D)/tree_lifetime.c											\
+		$(SRC_D)/branch_lifetime.c											\
 
-INC =	$(INC_D)/execblocks.h												\
+INC =	$(INC_D)/exectree.h													\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
