@@ -17,7 +17,12 @@
 
 typedef struct		t_node
 {
-	
+	// integer/function dispatch function variable;
+	// node parent
+	// node neighbour left
+	// node neighbour right
+	// vector of children
+	// vector of arguments
 }					s_node;
 
 #endif
