@@ -16,13 +16,12 @@ t_node	*branch_destroy(t_node *root)
 {
 	t_node	*node;
 
-	// ignore neighbours
 	while (*(size_t *)vector(&root->children, V_SIZE, 0, NULL) > 0)
 	{
 		node = vector(&root->children, V_PEEKBACK, 0, NULL);
-			
-		free(node);
+		branch_destroy(node);
 		vector(&root->children, V_POPBACK, 0, NULL);
 	}
+	free(root);
 	return (NULL);
 }
