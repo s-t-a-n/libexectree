@@ -13,4 +13,13 @@
 #ifndef EXECTREE_H
 # define EXECTREE_H
 
+typedef enum	e_et_nodetype
+{
+	E_SYM,
+	E_SYM_ENCAPS
+}				t_et_nodetype;
+
+void	*exectree_create();
+void	*exectree_destroy();
+
 #endif

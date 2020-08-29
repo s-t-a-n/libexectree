@@ -18,8 +18,9 @@
 # include "libft.h"
 
 # include "vector.h"
-
 # include "exectree.h"
+
+# define NODE_DEFAULT_CHILDREN 128
 
 typedef struct		s_node t_node;
 typedef void		*t_vector;

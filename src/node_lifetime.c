@@ -12,21 +12,27 @@
 
 #include "exectree_internal.h"
 
-t_node		*node_new()
+t_node		*node_new(void)
 {
 	t_node	*node;
 
 	node = ft_calloc(sizeof(t_node), 1);
 	if (node)
 	{
-
+		node->children = (t_node *)vector(&node->children, V_CREATE,
+							NODE_DEFAULT_CHILDREN, NULL);
+		if (!node->children)
+		{
+			free(node);
+			return (NULL);
+		}
 	}
 	return (node);
 }
 
 t_node		*node_destroy(t_node *node)
 {
-	free (node->subject);
-	free (node);
+	free(node->subject);
+	free(node);
 	return (NULL);
 }

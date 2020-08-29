@@ -12,14 +12,13 @@
 
 #include "exectree_internal.h"
 
-t_tree		*tree_new()
+t_tree		*tree_new(void)
 {
 	t_tree *tree;
 
 	tree = ft_calloc(sizeof(t_tree), 1);
 	if (tree)
 	{
-
 	}
 	return (tree);
 }
@@ -31,8 +30,9 @@ t_tree		*tree_destroy(t_tree *tree)
 	node = tree->root;
 	while (node->neighbour)
 	{
-
-
+		branch_destroy(node);
+		node = node->neighbour;
 	}
+	free(tree);
 	return (NULL);
 }
