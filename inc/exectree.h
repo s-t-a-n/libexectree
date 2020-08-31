@@ -20,6 +20,13 @@ typedef enum	e_et_nodetype
 }				t_et_nodetype;
 
 void	*exectree_create();
-void	*exectree_destroy(void *tree);
+void	*exectree_destroy(void *_tree);
+
+void	*exectree_populate(void *_tree,
+			const char *sym,
+			t_et_nodetype nt,
+			void *(*solver)(void *subject, void *children, void *neighbours));
+void	*exectree_parse(void *_tree);
+void	*exectree_execute(void *_tree);
 
 #endif

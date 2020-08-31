@@ -28,9 +28,9 @@ typedef void		*t_vector;
 typedef struct		s_node
 {
 	t_node			*parent;
-	t_node			*neighbour;
+	t_vector		neighbour;
 	t_vector		children;
-	void			(*solver)(t_node *node, unsigned int operator);
+	void			*(*solver)(void *subject, void *children, void *neighbours);
 	unsigned int	operator;
 	void			*subject;
 }					t_node;

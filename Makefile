@@ -22,6 +22,9 @@ LIB_D = lib
 
 # source and header files ###################################################
 SRC =	$(SRC_D)/exectree.c													\
+		$(SRC_D)/exectree_populate.c										\
+		$(SRC_D)/exectree_parse.c											\
+		$(SRC_D)/exectree_execute.c											\
 		$(SRC_D)/node_lifetime.c											\
 		$(SRC_D)/tree_lifetime.c											\
 		$(SRC_D)/branch_lifetime.c											\
