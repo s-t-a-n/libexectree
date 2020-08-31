@@ -20,6 +20,6 @@ typedef enum	e_et_nodetype
 }				t_et_nodetype;
 
 void	*exectree_create();
-void	*exectree_destroy();
+void	*exectree_destroy(void *tree);
 
 #endif
