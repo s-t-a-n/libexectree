@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/08/28 19:57:50 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/01 19:38:39 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,14 @@ INC_D = inc
 LIB_D = lib
 
 # source and header files ###################################################
-SRC =	$(SRC_D)/exectree.c													\
-		$(SRC_D)/exectree_populate.c										\
+SRC =	$(SRC_D)/exectree_populate.c										\
 		$(SRC_D)/exectree_parse.c											\
 		$(SRC_D)/exectree_execute.c											\
 		$(SRC_D)/node_lifetime.c											\
 		$(SRC_D)/tree_lifetime.c											\
 		$(SRC_D)/branch_lifetime.c											\
+		$(SRC_D)/tokentable_lifetime.c										\
+		$(SRC_D)/tokentable_populate.c										\
 
 INC =	$(INC_D)/exectree.h													\
 

@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   exectree_lifetime.c                                :+:    :+:            */
+/*   tokentable_populate.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/01 19:39:10 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/01 19:39:12 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/01 19:08:21 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/01 19:14:14 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "exectree_internal.h"
 
-void		*exectree_create()
+t_token		*tokentable_populate(t_tokentable *tokentable, t_token *_token)
 {
-	return((void *)tree_create());
-}
+	t_token	*token;
 
-void		*exectree_destroy(void *_tree)
-{
-	return((void *)tree_destroy((t_tree *)_tree));
+	if (tokentable->tokens[_token->symbol[0]])
+	{
+		token = tokentable->tokens[_token->symbol[0]];
+		while (token->next)
+			token = token->next;
+		token->next = _token;
+	}
+	else
+	{
+		tokentable->tokens[_token->symbol[0]] = _token;
+	}
+	return (_token);
 }
