@@ -13,20 +13,26 @@
 #ifndef EXECTREE_H
 # define EXECTREE_H
 
-typedef enum	e_et_nodetype
+typedef enum		e_et_symtype
 {
 	E_SYM,
 	E_SYM_ENCAPS
-}				t_et_nodetype;
+}					t_et_symtype;
 
-void	*exectree_create();
-void	*exectree_destroy(void *_tree);
+typedef struct		s_et_instruction
+{
+	const char		*sym;
+	t_et_symtype	st;
+	void			*(*solver)(	void *subject,
+								void *children,
+								void *neighbours);
+}					t_et_instruction;
 
-void	*exectree_populate(void *_tree,
-			const char *sym,
-			t_et_nodetype nt,
-			void *(*solver)(void *subject, void *children, void *neighbours));
-void	*exectree_parse(void *_tree);
-void	*exectree_execute(void *_tree);
+void				*exectree_create();
+void				*exectree_destroy(void *_tree);
+
+void				*exectree_populate(void *_tree, t_et_instruction in);
+void				*exectree_parse(void *_tree, const char *str);
+void				*exectree_execute(void *_tree);
 
 #endif
