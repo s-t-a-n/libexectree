@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/28 19:46:11 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/08/28 19:55:23 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/02 19:56:51 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_node		*node_new(void)
 
 t_node		*node_destroy(t_node *node)
 {
+	vector(node->children, V_DESTROY, 0, NULL);
 	free(node->subject);
 	free(node);
 	return (NULL);

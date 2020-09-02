@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/01 19:38:39 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/02 21:20:50 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,10 +22,12 @@ LIB_D = lib
 
 # source and header files ###################################################
 SRC =	$(SRC_D)/exectree_populate.c										\
-		$(SRC_D)/exectree_parse.c											\
+		$(SRC_D)/exectree_lifetime.c										\
+		$(SRC_D)/exectree_build.c											\
 		$(SRC_D)/exectree_execute.c											\
 		$(SRC_D)/node_lifetime.c											\
 		$(SRC_D)/tree_lifetime.c											\
+		$(SRC_D)/tree_populate.c											\
 		$(SRC_D)/branch_lifetime.c											\
 		$(SRC_D)/tokentable_lifetime.c										\
 		$(SRC_D)/tokentable_populate.c										\
@@ -146,6 +148,7 @@ clean:
 	@$(RM) $(OBJ)
 	@$(RM) -r $(NAME).dSYM
 	@$(RM) *.testbin
+	@$(RM) -r *.testbin.dSYM
 	@$(RM) -r $(OBJ_D)
 	@make -C $(LIB_D)/libft clean || true
 	@make -C $(LIB_D)/libvector clean || true
@@ -163,7 +166,23 @@ re: fclean all
 basics_crit_test: TEST='basics_crit_t'
 basics_crit_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(T_FLAGS)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME)
+	@if test -e $(CC_ERROR); then                                           \
+        $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
+    elif test -s $(CC_LOG); then                                            \
+        $(ECHO) "$(WARN_STRING)\n" && $(CAT) $(CC_LOG);                     \
+    else                                                                    \
+        $(ECHO) "$(OK_STRING)\n";                                           \
+    fi
+	@$(ECHO) "Running $(TEST)...\n"
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@# output removed; criterion is clear enough
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+basics_test: TEST='basics_t'
+basics_test: $(NAME)
+	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then                                           \
         $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
     elif test -s $(CC_LOG); then                                            \

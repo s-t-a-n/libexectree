@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/01 18:40:13 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/01 19:07:15 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/02 20:14:19 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_tokentable		*tokentable_destroy(t_tokentable *tokentable)
 	while (tokentable->size > 0)
 	{
 		token = tokentable->tokens[tokentable->size - 1];
-		while (token)
+		while (token && token->malloced == E_MALLOC)
 		{
 			old = token;
 			token = token->next;
