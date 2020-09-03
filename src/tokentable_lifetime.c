@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/01 18:40:13 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/02 20:14:19 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/03 15:25:00 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_tokentable		*tokentable_destroy(t_tokentable *tokentable)
 		}
 		tokentable->size--;
 	}
+	free(tokentable->tokens);
 	free(tokentable);
 	return (NULL);
 }
