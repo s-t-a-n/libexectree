@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/05 19:21:03 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/05 22:37:30 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,11 @@ SRC =	$(SRC_D)/lexer_generator_lifetime.c									\
 		$(SRC_D)/branch_lifetime.c											\
 		$(SRC_D)/tokentable_lifetime.c										\
 		$(SRC_D)/tokentable_populate.c										\
+		$(SRC_D)/logger.c													\
 
 INC =	$(INC_D)/exectree.h													\
+		$(INC_D)/exectree_internal.h										\
+		$(INC_D)/logging.h													\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
@@ -175,7 +178,7 @@ re: fclean all
 basics_crit_test: TEST='basics_crit_t'
 basics_crit_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin tests/$(TEST).c $(NAME)
 	@if test -e $(CC_ERROR); then                                           \
         $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
     elif test -s $(CC_LOG); then                                            \
@@ -191,7 +194,7 @@ basics_crit_test: $(NAME)
 basics_test: TEST='basics_t'
 basics_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then                                           \
         $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
     elif test -s $(CC_LOG); then                                            \
@@ -207,7 +210,7 @@ basics_test: $(NAME)
 lexer_generator_test: TEST='lexer_generator_t'
 lexer_generator_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then                                           \
         $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
     elif test -s $(CC_LOG); then                                            \
