@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/02 21:20:50 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/05 19:21:03 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,9 @@ INC_D = inc
 LIB_D = lib
 
 # source and header files ###################################################
-SRC =	$(SRC_D)/exectree_populate.c										\
+SRC =	$(SRC_D)/lexer_generator_lifetime.c									\
+		$(SRC_D)/lexer_generator.c											\
+		$(SRC_D)/exectree_populate.c										\
 		$(SRC_D)/exectree_lifetime.c										\
 		$(SRC_D)/exectree_build.c											\
 		$(SRC_D)/exectree_execute.c											\
@@ -37,9 +39,11 @@ INC =	$(INC_D)/exectree.h													\
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 # dependencies ##############################################################
+LIBGNL=lib/libgnl/libgnl.a
 LIBFT=lib/libft/libft.a
 LIBVECTOR=lib/libvector/libvector.a
-LIB_INC= -I$(LIB_D)/libft/inc												\
+LIB_INC= -I$(LIB_D)/libgnl/inc												\
+		 -I$(LIB_D)/libft/inc												\
 		 -I$(LIB_D)/libvector/inc											\
 
 # output format #############################################################
@@ -110,7 +114,7 @@ all: $(NAME)
 submodule:
 	@git submodule update --init --remote --recursive
 
-$(NAME): $(LIBFT) $(LIBVECTOR) $(OBJ_D) $(OBJ) $(INC_D) $(INC)
+$(NAME): $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(OBJ_D) $(OBJ) $(INC_D) $(INC)
 	@$(ECHO) "Linking $(NAME)..."
 	@$(LD) $(LD_FLAGS) $(NAME) $(OBJ) 2>$(CC_LOG)
 	@if test -e $(CC_ERROR); then											\
@@ -138,6 +142,9 @@ $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
+$(LIBGNL):
+	@make -C $(LIB_D)/libgnl
+
 $(LIBFT):
 	@make -C $(LIB_D)/libft
 
@@ -150,11 +157,13 @@ clean:
 	@$(RM) *.testbin
 	@$(RM) -r *.testbin.dSYM
 	@$(RM) -r $(OBJ_D)
+	@make -C $(LIB_D)/libgnl clean || true
 	@make -C $(LIB_D)/libft clean || true
 	@make -C $(LIB_D)/libvector clean || true
 
 fclean: clean
 	@$(RM) $(NAME)
+	@make -C $(LIB_D)/libgnl fclean || true
 	@make -C $(LIB_D)/libft fclean || true
 	@make -C $(LIB_D)/libvector fclean || true
 
@@ -182,7 +191,23 @@ basics_crit_test: $(NAME)
 basics_test: TEST='basics_t'
 basics_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBFT) $(LIBVECTOR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
+	@if test -e $(CC_ERROR); then                                           \
+        $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
+    elif test -s $(CC_LOG); then                                            \
+        $(ECHO) "$(WARN_STRING)\n" && $(CAT) $(CC_LOG);                     \
+    else                                                                    \
+        $(ECHO) "$(OK_STRING)\n";                                           \
+    fi
+	@$(ECHO) "Running $(TEST)...\n"
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@# output removed; criterion is clear enough
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+lexer_generator_test: TEST='lexer_generator_t'
+lexer_generator_test: $(NAME)
+	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then                                           \
         $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
     elif test -s $(CC_LOG); then                                            \

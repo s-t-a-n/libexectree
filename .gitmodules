@@ -4,3 +4,6 @@
 [submodule "lib/libvector"]
 	path = lib/libvector
 	url = git@github.com:s-t-a-n/libvector.git
+[submodule "lib/libgnl"]
+	path = lib/libgnl
+	url = git@github.com:s-t-a-n/libgnl.git
