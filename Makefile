@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/05 22:37:30 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/06 19:48:31 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,9 @@ LIB_D = lib
 # source and header files ###################################################
 SRC =	$(SRC_D)/lexer_generator_lifetime.c									\
 		$(SRC_D)/lexer_generator.c											\
+		$(SRC_D)/lexer_generator_process_nonterminal.c						\
+		$(SRC_D)/lexer_generator_process_definitions.c						\
+		$(SRC_D)/lexer_generator_definition_lifetime.c						\
 		$(SRC_D)/exectree_populate.c										\
 		$(SRC_D)/exectree_lifetime.c										\
 		$(SRC_D)/exectree_build.c											\
@@ -219,7 +222,7 @@ lexer_generator_test: $(NAME)
         $(ECHO) "$(OK_STRING)\n";                                           \
     fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@# output removed; criterion is clear enough
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 

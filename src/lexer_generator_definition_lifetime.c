@@ -1,36 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_generator_lifetime.c                         :+:    :+:            */
+/*   lexer_generator_definition_lifetime.c              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/05 18:28:05 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/06 17:51:20 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/06 18:28:15 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/06 18:32:21 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include "libft.h"
-#include "vector.h"
-
 #include "lexer_generator.h"
 
-t_lexer_ir		*lexer_generator_create()
+t_lex_definition	*lexer_definition_create(	t_lex_definition_type type,
+												char *terminal,
+												t_lex_object *nonterminal)
 {
-	t_lexer_ir	*ir;
+	t_lex_definition *def;
 
-	ir = ft_calloc(sizeof(t_lexer_ir), 1);
-	if (ir)
+	def = malloc(sizeof(t_lex_definition));
+	if (def)
 	{
-		vector(&ir->vec_lex_objects, V_CREATE, VEC_DEF_SIZE, NULL);
-		vector(&ir->non_terminals, V_CREATE, VEC_DEF_SIZE, NULL);
+		def->type = type;
+		def->terminal = terminal;
+		def->nonterminal = nonterminal;
 	}
-	return (ir);
+	return(def);
 }
 
-t_lexer_ir		*lexer_generator_destroy(t_lexer_ir *ir)
+t_lex_definition	*lexer_definition_destroy(t_lex_definition *def)
 {
-	free(ir);
+	free(def->terminal);
+	free(def);
 	return(NULL);
 }
