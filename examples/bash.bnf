@@ -17,7 +17,6 @@
 
 <assignment_word> ::= <word> '=' <word>
 
-
 <redirection> ::=  '>' <word>
                 |  '<' <word>
                 |  <number> '>' <word>
@@ -60,15 +59,15 @@
             |  <shell_command>
             |  <shell_command> <redirection_list>
 
-<shell_command> ::=  <for_command>
-                  |  <case_command>
-                  |  while <compound_list> do <compound_list> done
-                  |  until <compound_list> do <compound_list> done
-                  |  <select_command>
-                  |  <if_command>
-                  |  <subshell>
-                  |  <group_command>
-                  |  <function_def>
+#<shell_command> ::=  <for_command>
+#                  |  <case_command>
+#                  |  while <compound_list> do <compound_list> done
+#                  |  until <compound_list> do <compound_list> done
+#                  |  <select_command>
+#                  |  <if_command>
+#                  |  <subshell>
+#                  |  <group_command>
+#                  |  <function_def>
 
 #<for_command> ::=  for <word> <newline_list> do <compound_list> done
 #                |  for <word> <newline_list> '{' <compound_list> '}'
