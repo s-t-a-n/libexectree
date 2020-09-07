@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "get_next_line.h"
 
-#include "logging.h"
+#include "logger.h"
 #include "lexer_generator.h"
 
 /*

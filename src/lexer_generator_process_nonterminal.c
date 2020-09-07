@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "vector.h"
 
-#include "logging.h"
+#include "logger.h"
 #include "lexer_generator.h"
 
 t_lex_object		*process_new_nonterminal(t_lexer_ir *ir, char **line)
@@ -31,7 +31,7 @@ t_lex_object		*process_new_nonterminal(t_lexer_ir *ir, char **line)
 			*line += ft_strclen(*line, '=');
 			if (obj->nonterminal)
 			{
-				logger(INFO, "lexer_generator", "Pushing non-terminal", obj->nonterminal);
+				logger(INFO, 3, "lexer_generator", "Pushing non-terminal", obj->nonterminal);
 				vector(&ir->vec_lex_objects, V_PUSHBACK, 0, obj);
 			}
 			else

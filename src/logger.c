@@ -12,7 +12,7 @@
 
 #include <unistd.h>
 #include "libft.h"
-#include "logging.h"
+#include "logger.h"
 
 /*
 ** Excuse the overhead when DEBUG is unset; 42 doesn't allow macro's..
@@ -20,28 +20,32 @@
 
 #ifdef DEBUG
 
+static char	*colors[3] = {
+	[INFO] = "\x1b[32;01m",
+	[WARN] = "\x1b[33;01m",
+	[CRIT] = "\x1b[31;01m"
+};
+
 void	logger(	t_error errl,
-				const char *header,
-				const char *body,
-				const char *tail)
+				unsigned int argc,
+				...)
 {
-	char	buffer[1024];
+	va_list	args;
+	unsigned int i;
+	char	buffer[LOG_BUF_SIZE];
 	
+	va_start(args, argc);
 	buffer[0] = '\0';
-	if (errl == CRIT)
-		ft_strlcat(buffer, "\x1b[31;01m", LOG_BUF_SIZE);
-	else if (errl == WARN)
-		ft_strlcat(buffer, "\x1b[33;01m", LOG_BUF_SIZE);
-	else
-		ft_strlcat(buffer, "\x1b[32;01m", LOG_BUF_SIZE);
-	ft_strlcat(buffer, header, LOG_BUF_SIZE);
-	ft_strlcat(buffer, "\x1b[0m", LOG_BUF_SIZE);
-	ft_strlcat(buffer, " -> ", LOG_BUF_SIZE);
-	ft_strlcat(buffer, body, LOG_BUF_SIZE);
-	if (tail)
+	ft_strlcat(buffer, colors[errl], LOG_BUF_SIZE);
+	ft_strlcat(buffer, va_arg(args, char *), LOG_BUF_SIZE);
+	ft_strlcat(buffer, "\x1b[0m -> ", LOG_BUF_SIZE);
+	i = 1;
+	while(i < argc)
 	{
-		ft_strlcat(buffer, " : ", LOG_BUF_SIZE);
-		ft_strlcat(buffer, tail, LOG_BUF_SIZE);
+			ft_strlcat(buffer, va_arg(args, char *), LOG_BUF_SIZE);
+			if (i < argc - 1)
+				ft_strlcat(buffer, " : ", LOG_BUF_SIZE);
+			i++;
 	}
 	ft_strlcat(buffer, "\n", LOG_BUF_SIZE);
 	write(errl == INFO ? STD_OUT : STD_ERR, buffer, ft_strlen(buffer));
@@ -50,14 +54,11 @@ void	logger(	t_error errl,
 #else
 
 void	logger(	t_error errl,
-				const char *header,
-				const char *body,
-				const char *tail)
+				unsigned int argc,
+				...)
 {
 	(void)errl;
-	(void)header;
-	(void)body;
-	(void)tail;
+	(void)argc;
 }
 
 #endif

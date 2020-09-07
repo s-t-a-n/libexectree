@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   logging.h                                          :+:    :+:            */
+/*   logger.h                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
@@ -10,8 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOGGING_H
-# define LOGGING_H
+#ifndef LOGGER_H
+# define LOGGER_H
+
+#include <stdarg.h>
 
 # define LOG_BUF_SIZE 1024
 
@@ -26,7 +28,6 @@ typedef enum		e_error
 }					t_error;
 
 void				logger(	t_error errl,
-							const char *header,
-							const char *body,
-							const char *tail);
+							unsigned int argc,
+							...);
 #endif

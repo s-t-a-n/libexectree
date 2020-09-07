@@ -13,7 +13,7 @@
 #include "libft.h"
 #include "vector.h"
 
-#include "logging.h"
+#include "logger.h"
 #include "lexer_generator.h"
 
 static t_lex_object		*find_lex_obj(t_lexer_ir *ir, char *key)
@@ -25,17 +25,12 @@ static t_lex_object		*find_lex_obj(t_lexer_ir *ir, char *key)
 	while (i > 0)
 	{
 		obj = vector(&ir->vec_lex_objects, V_PEEKAT, i - 1, NULL);
-		printf("obj : %p, obj->nonterminal -> %p, key : %s, index %zu\n", obj, obj->nonterminal, key, i - 1);
-		if (!obj)
-		{
-			printf("looking at index %zu for key %s\n", i - 1, key);
-			abort();
-		}
+		//printf("obj : %p, obj->nonterminal -> %p, key : %s, index %zu\n", obj, obj->nonterminal, key, i - 1);
 		if (ft_strcmp(obj->nonterminal, key) == 0)
 			return(obj);
 		i--;
 	}
-	printf("returning NULL\n");
+	//printf("returning NULL\n");
 	return (NULL);
 }
 
@@ -48,7 +43,7 @@ static uint8_t			process_nonterminal(t_lex_object *obj, t_lexer_ir *ir, char **l
 	(*line)++;
 	keylen = ft_strclen(*line, '>');
 	key = ft_strsub(*line, 0, keylen);
-	printf("key : |%s|\n", key);
+	//printf("key : |%s|\n", key);
 	if (key)
 	{
 		if (ft_strcmp(obj->nonterminal, key) == 0)
@@ -57,11 +52,11 @@ static uint8_t			process_nonterminal(t_lex_object *obj, t_lexer_ir *ir, char **l
 			def = lexer_definition_create(NONTERMINAL, NULL, find_lex_obj(ir, key));
 		if (def)
 		{
-			logger(INFO, "lexer_generator", "adding nonterminal to definition", key);
+			logger(INFO, 3, "lexer_generator", "adding nonterminal to definition", key);
 			vector(&obj->definitions, V_PUSHBACK, 0, def);
 		}
 		else
-			logger(WARN, "lexer_generator", "can't find nonterminal for key", key);
+			logger(WARN, 3, "lexer_generator", "can't find nonterminal for key", key);
 		free(key);
 	}
 	else
@@ -83,7 +78,7 @@ static uint8_t			process_literal(t_lex_object *obj, char **line)
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
 	if (word)
 	{
-		logger(INFO, "lexer_generator", "adding (literal) terminal to definition", word);
+		logger(INFO, 3, "lexer_generator", "adding (literal) terminal to definition", word);
 		def = lexer_definition_create(TERMINAL, word, NULL);
 		if (def)
 			vector(&obj->definitions, V_PUSHBACK, 0, def);
@@ -109,7 +104,7 @@ static uint8_t			process_word(t_lex_object *obj, char **line)
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
 	if (word)
 	{
-		logger(INFO, "lexer_generator", "adding (word) terminal to definition", word);
+		logger(INFO, 3, "lexer_generator", "adding (word) terminal to definition", word);
 		def = lexer_definition_create(TERMINAL, word, NULL);
 		if (def)
 			vector(&obj->definitions, V_PUSHBACK, 0, def);
@@ -143,6 +138,6 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 		}
 	}
 	else
-		logger(WARN, "lexer_generator", "Line doesn't start with '|' or '='", *line);
+		logger(WARN, 3, "lexer_generator", "Line doesn't start with '|' or '='", *line);
 	return (1);
 }

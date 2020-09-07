@@ -40,7 +40,7 @@ SRC =	$(SRC_D)/lexer_generator_lifetime.c									\
 
 INC =	$(INC_D)/exectree.h													\
 		$(INC_D)/exectree_internal.h										\
-		$(INC_D)/logging.h													\
+		$(INC_D)/logger.h													\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
