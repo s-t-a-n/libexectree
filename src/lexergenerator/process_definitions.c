@@ -129,6 +129,7 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 		*line = ft_strscan(*line);
 		while(**line)
 		{
+			// right now this just dumps everything seperately : definitions should be self contained -> read untill '|' 
 			if (**line == '\'')
 				process_literal(obj, line);
 			else if (**line == '<')
