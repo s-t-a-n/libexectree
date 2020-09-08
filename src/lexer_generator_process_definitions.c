@@ -31,7 +31,6 @@ static t_lex_object		*find_lex_obj(t_lexer_ir *ir, char *key)
 	}
 	// if no candidate was found, push the required object to a post fix vector so we
 	// can add the candidate later, or return error
-	logger(WARN, 4, "lexer_generator", "Couldnt find lex object for non-terminal", key, "adding it to post-stack!");
 	return (NULL);
 }
 

@@ -18,6 +18,8 @@ t_lex_definition	*lexer_definition_create(	t_lex_definition_type type,
 {
 	t_lex_definition *def;
 
+	if (!terminal)
+		return(NULL);
 	def = malloc(sizeof(t_lex_definition));
 	if (def)
 	{
