@@ -14,7 +14,7 @@
 #include "libft.h"
 #include "vector.h"
 
-#include "lexer_generator.h"
+#include "lexergenerator.h"
 
 t_lexer_ir		*lexer_generator_create()
 {

@@ -259,8 +259,8 @@ basics_test: $(NAME)
 		&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-lexer_generator_test: TEST='lexer_generator_t'
-lexer_generator_test: $(LEXERGENERATOR)
+lexer_ir_test: TEST='lexer_ir_t'
+lexer_ir_test: $(LEXERGENERATOR)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
 		tests/$(TEST).c $(LEXERGENERATOR) $(LOGGER) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
@@ -273,6 +273,8 @@ lexer_generator_test: $(LEXERGENERATOR)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 tests: $(NAME)
-	@make ASAN=1 re lexer_generator_test
+	@make ASAN=1 re
+	@make ASAN=1 basics_test
+	@make ASAN=1 lexer_ir_test
 
 .PHONY = all clean fclean re

@@ -14,7 +14,7 @@
 #include "get_next_line.h"
 
 #include "logger.h"
-#include "lexer_generator.h"
+#include "lexergenerator.h"
 
 /*
 ** simple top-down parser for extracting grammar rules from a BNF

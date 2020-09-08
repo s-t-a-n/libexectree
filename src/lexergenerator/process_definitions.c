@@ -14,7 +14,7 @@
 #include "vector.h"
 
 #include "logger.h"
-#include "lexer_generator.h"
+#include "lexergenerator.h"
 
 static t_lex_object		*find_lex_obj(t_lexer_ir *ir, char *key)
 {

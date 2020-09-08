@@ -1,7 +1,7 @@
 
 #include "libft.h"
 #include "vector.h"
-#include "lexer_generator.h"
+#include "lexergenerator.h"
 
 t_lex_object	*lexer_object_create(char *nonterminal)
 {

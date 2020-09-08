@@ -14,7 +14,7 @@
 #include "vector.h"
 
 #include "logger.h"
-#include "lexer_generator.h"
+#include "lexergenerator.h"
 
 t_lex_object		*process_new_nonterminal(t_lexer_ir *ir, char **line)
 {
