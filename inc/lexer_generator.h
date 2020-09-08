@@ -47,7 +47,6 @@ typedef struct		s_lex_object
 typedef struct		s_lexer_ir
 {
 	void			*vec_lex_objects;
-	void			*non_terminals;
 	unsigned int	size;
 }					t_lexer_ir;
 
@@ -63,6 +62,9 @@ t_lexer_ir			*lexer_generator_create_ir(t_lexer_ir *ir, int fd);
 
 t_lex_object		*process_new_nonterminal(t_lexer_ir *ir, char **line);
 uint8_t				process_definitions(t_lexer_ir *ir, t_lex_object *obj, char **line);
+
+t_lex_object		*lexer_object_create(char *nonterminal);
+t_lex_object		*lexer_object_destroy(t_lex_object *obj);
 
 t_lex_definition	*lexer_definition_create(	t_lex_definition_type type,
 												char *terminal,

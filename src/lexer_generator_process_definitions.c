@@ -25,12 +25,14 @@ static t_lex_object		*find_lex_obj(t_lexer_ir *ir, char *key)
 	while (i > 0)
 	{
 		obj = vector(&ir->vec_lex_objects, V_PEEKAT, i - 1, NULL);
-		//printf("obj : %p, obj->nonterminal -> %p, key : %s, index %zu\n", obj, obj->nonterminal, key, i - 1);
+		printf("obj : %p, obj->nonterminal -> %p, key : %s, index %zu\n", obj, obj->nonterminal, key, i - 1);
 		if (ft_strcmp(obj->nonterminal, key) == 0)
 			return(obj);
 		i--;
 	}
-	//printf("returning NULL\n");
+	// if no candidate was found, push the required object to a post fix vector so we
+	// can add the candidate later, or return error
+	printf("returning NULL\n");
 	return (NULL);
 }
 

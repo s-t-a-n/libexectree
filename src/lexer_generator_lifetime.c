@@ -23,14 +23,23 @@ t_lexer_ir		*lexer_generator_create()
 	ir = ft_calloc(sizeof(t_lexer_ir), 1);
 	if (ir)
 	{
-		vector(&ir->vec_lex_objects, V_CREATE, VEC_DEF_SIZE, NULL);
-		vector(&ir->non_terminals, V_CREATE, VEC_DEF_SIZE, NULL);
+		if (!vector(&ir->vec_lex_objects, V_CREATE, VEC_DEF_SIZE, NULL))
+		{
+			free(ir);
+			return (NULL);
+		}
 	}
 	return (ir);
 }
 
 t_lexer_ir		*lexer_generator_destroy(t_lexer_ir *ir)
 {
+	while (*(size_t *)vector(&ir->vec_lex_objects, V_SIZE, 0, NULL) > 0)
+	{
+		lexer_object_destroy(vector(&ir->vec_lex_objects, V_PEEKBACK, 0, NULL));
+		vector(&ir->vec_lex_objects, V_POPBACK, 0, NULL);
+	}
+	vector(&ir->vec_lex_objects, V_DESTROY, 0, NULL);
 	free(ir);
 	return(NULL);
 }

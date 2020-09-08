@@ -26,6 +26,7 @@ SRC =	$(SRC_D)/lexer_generator_lifetime.c									\
 		$(SRC_D)/lexer_generator_process_nonterminal.c						\
 		$(SRC_D)/lexer_generator_process_definitions.c						\
 		$(SRC_D)/lexer_generator_definition_lifetime.c						\
+		$(SRC_D)/lexer_generator_object_lifetime.c							\
 		$(SRC_D)/exectree_populate.c										\
 		$(SRC_D)/exectree_lifetime.c										\
 		$(SRC_D)/exectree_build.c											\
