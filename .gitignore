@@ -111,6 +111,7 @@ tags
 # End of https://www.gitignore.io/api/c,vim,macos
 
 obj
+.refresh
 *.log
 *.testbin
 libexectree.a

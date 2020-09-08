@@ -115,22 +115,34 @@ ifeq ($(UNAME_S),Darwin)
     LD_FLAGS +=
 endif
 
+# daily submodule autoupdate ################################################
+GIT_MODULES=.refresh
+TIME := $(shell date +'%d')
+ifneq ("$(wildcard $(GIT_MODULES))","")
+    LAST_UPDATE=$(shell cat $(GIT_MODULES))
+    ifneq ($(LAST_UPDATE),$(TIME))
+        $(shell rm -f $(GIT_MODULES))
+    endif
+endif
+
 # make commands #############################################################
 all: $(NAME)
+
+$(GIT_MODULES):
+	@$(ECHO) "Updating submodules..."
+	@git submodule update --init --remote
+	@$(ECHO) $(shell date +'%d') > $(GIT_MODULES)
+	@$(ECHO) "$(OK_STRING)\n"
 
 submodule:
 	@git submodule update --init --remote --recursive
 
-$(NAME): $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(OBJ_D) $(OBJ) $(INC_D) $(INC)
+$(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(OBJ_D) $(OBJ) $(INC_D) $(INC)
 	@$(ECHO) "Linking $(NAME)..."
 	@$(LD) $(LD_FLAGS) $(NAME) $(OBJ) 2>$(CC_LOG)
-	@if test -e $(CC_ERROR); then											\
-		$(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
-	elif test -s $(CC_LOG); then											\
-		$(ECHO) "$(WARN_STRING)\n" && $(CAT) $(CC_LOG);						\
-	else																	\
-		$(ECHO) "$(OK_STRING)\n";											\
-	fi
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 $(OBJ_D):
@@ -140,13 +152,9 @@ $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
 	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG) 		\
 		|| touch $(CC_ERROR)
-	@if test -e $(CC_ERROR); then											\
-		$(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
-	elif test -s $(CC_LOG); then											\
-		$(ECHO) "$(WARN_STRING)\n" && $(CAT) $(CC_LOG);						\
-	else																	\
-		$(ECHO) "$(OK_STRING)\n";											\
-	fi
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 $(LIBGNL):
@@ -183,13 +191,9 @@ basics_crit_test: TEST='basics_crit_t'
 basics_crit_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin tests/$(TEST).c $(NAME)
-	@if test -e $(CC_ERROR); then                                           \
-        $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
-    elif test -s $(CC_LOG); then                                            \
-        $(ECHO) "$(WARN_STRING)\n" && $(CAT) $(CC_LOG);                     \
-    else                                                                    \
-        $(ECHO) "$(OK_STRING)\n";                                           \
-    fi
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
 	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@# output removed; criterion is clear enough
@@ -199,13 +203,9 @@ basics_test: TEST='basics_t'
 basics_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
-	@if test -e $(CC_ERROR); then                                           \
-        $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
-    elif test -s $(CC_LOG); then                                            \
-        $(ECHO) "$(WARN_STRING)\n" && $(CAT) $(CC_LOG);                     \
-    else                                                                    \
-        $(ECHO) "$(OK_STRING)\n";                                           \
-    fi
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
 	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@# output removed; criterion is clear enough
@@ -215,13 +215,9 @@ lexer_generator_test: TEST='lexer_generator_t'
 lexer_generator_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
-	@if test -e $(CC_ERROR); then                                           \
-        $(ECHO) "$(ERROR_STRING)\n" && $(CAT) $(CC_LOG);					\
-    elif test -s $(CC_LOG); then                                            \
-        $(ECHO) "$(WARN_STRING)\n" && $(CAT) $(CC_LOG);                     \
-    else                                                                    \
-        $(ECHO) "$(OK_STRING)\n";                                           \
-    fi
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
 	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@# output removed; criterion is clear enough
