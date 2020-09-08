@@ -10,9 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = libexectree.a
+NAME			= libexectree.a
 
-# build variables
+# internal libraries ########################################################
+LOGGER			= logger.a
+LEXERGENERATOR	= lexergenerator.a
 
 # directories ###############################################################
 SRC_D = src
@@ -20,14 +22,8 @@ OBJ_D = obj
 INC_D = inc
 LIB_D = lib
 
-# source and header files ###################################################
-SRC =	$(SRC_D)/lexer_generator_lifetime.c									\
-		$(SRC_D)/lexer_generator.c											\
-		$(SRC_D)/lexer_generator_process_nonterminal.c						\
-		$(SRC_D)/lexer_generator_process_definitions.c						\
-		$(SRC_D)/lexer_generator_definition_lifetime.c						\
-		$(SRC_D)/lexer_generator_object_lifetime.c							\
-		$(SRC_D)/exectree_populate.c										\
+# generic source files ######################################################
+SRC =	$(SRC_D)/exectree_populate.c										\
 		$(SRC_D)/exectree_lifetime.c										\
 		$(SRC_D)/exectree_build.c											\
 		$(SRC_D)/exectree_execute.c											\
@@ -37,13 +33,23 @@ SRC =	$(SRC_D)/lexer_generator_lifetime.c									\
 		$(SRC_D)/branch_lifetime.c											\
 		$(SRC_D)/tokentable_lifetime.c										\
 		$(SRC_D)/tokentable_populate.c										\
-		$(SRC_D)/logger.c													\
-
-INC =	$(INC_D)/exectree.h													\
-		$(INC_D)/exectree_internal.h										\
-		$(INC_D)/logger.h													\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+
+### logger source files
+LOG_SRC=$(SRC_D)/logger/logger.c											\
+
+LOG_OBJ :=	$(LOG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+
+### lexer generator source files
+LG_SRC =$(SRC_D)/lexergenerator/lexer_generator.c							\
+		$(SRC_D)/lexergenerator/lifetime.c									\
+		$(SRC_D)/lexergenerator/process_nonterminal.c						\
+		$(SRC_D)/lexergenerator/process_definitions.c						\
+		$(SRC_D)/lexergenerator/definition_lifetime.c						\
+		$(SRC_D)/lexergenerator/object_lifetime.c							\
+
+LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 # dependencies ##############################################################
 LIBGNL=lib/libgnl/libgnl.a
@@ -137,23 +143,61 @@ $(GIT_MODULES):
 submodule:
 	@git submodule update --init --remote --recursive
 
-$(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(OBJ_D) $(OBJ) $(INC_D) $(INC)
+$(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)			\
+		$(LEXERGENERATOR) $(OBJ_D) $(OBJ)
 	@$(ECHO) "Linking $(NAME)..."
 	@$(LD) $(LD_FLAGS) $(NAME) $(OBJ) 2>$(CC_LOG)
-	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(LOGGER): $(GIT_MODULES) $(LIBFT) $(OBJ_D) $(LOG_OBJ)
+	@$(ECHO) "Linking $(LOGGER)..."
+	@$(LD) $(LD_FLAGS) $(LOGGER) $(LOG_OBJ) 2>$(CC_LOG)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(LEXERGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
+		$(OBJ_D) $(LG_OBJ)
+	@$(ECHO) "Linking $(LEXERGENERATOR)..."
+	@$(LD) $(LD_FLAGS) $(LEXERGENERATOR) $(LG_OBJ) 2>$(CC_LOG)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 $(OBJ_D):
 	@mkdir -p $(OBJ_D)
+	@mkdir -p $(OBJ_D)/lexergenerator
+	@mkdir -p $(OBJ_D)/logger
 
 $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
-	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG) 		\
+	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
 		|| touch $(CC_ERROR)
-	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(LOG_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
+	@$(ECHO) "Compiling $<..."
+	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
+		|| touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(LG_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
+	@$(ECHO) "Compiling $<..."
+	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
+		|| touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
@@ -178,6 +222,8 @@ clean:
 
 fclean: clean
 	@$(RM) $(NAME)
+	@$(RM) $(LEXERGENERATOR)
+	@$(RM) $(LOGGER)
 	@make -C $(LIB_D)/libgnl fclean || true
 	@make -C $(LIB_D)/libft fclean || true
 	@make -C $(LIB_D)/libvector fclean || true
@@ -190,40 +236,43 @@ re: fclean all
 basics_crit_test: TEST='basics_crit_t'
 basics_crit_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin tests/$(TEST).c $(NAME)
-	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
+		tests/$(TEST).c $(NAME)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
-	@# output removed; criterion is clear enough
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin		\
+		&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 basics_test: TEST='basics_t'
 basics_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin	\
+		tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
-	@# output removed; criterion is clear enough
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin		\
+		&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_generator_test: TEST='lexer_generator_t'
-lexer_generator_test: $(NAME)
+lexer_generator_test: $(LEXERGENERATOR)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
+		tests/$(TEST).c $(LEXERGENERATOR) $(LOGGER) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
-	@# output removed; criterion is clear enough
+	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS)				\
+		&& $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 tests: $(NAME)
-	@make basics_crit_test
+	@make ASAN=1 re lexer_generator_test
 
 .PHONY = all clean fclean re
