@@ -20,7 +20,7 @@
 
 #ifdef DEBUG
 
-static char	*colors[3] = {
+const static char	*colors[3] = {
 	[INFO] = "\x1b[32;01m",
 	[WARN] = "\x1b[33;01m",
 	[CRIT] = "\x1b[31;01m"
@@ -57,6 +57,7 @@ void	logger(	t_error errl,
 				unsigned int argc,
 				...)
 {
+	return ;
 	(void)errl;
 	(void)argc;
 }
