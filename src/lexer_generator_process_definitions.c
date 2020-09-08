@@ -25,14 +25,13 @@ static t_lex_object		*find_lex_obj(t_lexer_ir *ir, char *key)
 	while (i > 0)
 	{
 		obj = vector(&ir->vec_lex_objects, V_PEEKAT, i - 1, NULL);
-		printf("obj : %p, obj->nonterminal -> %p, key : %s, index %zu\n", obj, obj->nonterminal, key, i - 1);
 		if (ft_strcmp(obj->nonterminal, key) == 0)
 			return(obj);
 		i--;
 	}
 	// if no candidate was found, push the required object to a post fix vector so we
 	// can add the candidate later, or return error
-	printf("returning NULL\n");
+	logger(WARN, 4, "lexer_generator", "Couldnt find lex object for non-terminal", key, "adding it to post-stack!");
 	return (NULL);
 }
 
@@ -45,7 +44,6 @@ static uint8_t			process_nonterminal(t_lex_object *obj, t_lexer_ir *ir, char **l
 	(*line)++;
 	keylen = ft_strclen(*line, '>');
 	key = ft_strsub(*line, 0, keylen);
-	//printf("key : |%s|\n", key);
 	if (key)
 	{
 		if (ft_strcmp(obj->nonterminal, key) == 0)

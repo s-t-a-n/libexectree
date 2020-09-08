@@ -57,6 +57,7 @@ t_lexer_ir		*lexer_generator(const char *bnf_fpath)
 				}
 				free(line);
 			}
+			free(line);
 			close(fd);
 		}
 		else
