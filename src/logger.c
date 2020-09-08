@@ -16,6 +16,8 @@
 
 /*
 ** Excuse the overhead when DEBUG is unset; 42 doesn't allow macro's..
+** Current LOG_BUF_SIZE overflow is not handled; capping all output messages
+** to LOG_BUG_SIZE. Also, use of strlcat is not very optimized. 
 */
 
 #ifdef DEBUG
