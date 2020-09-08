@@ -45,17 +45,19 @@ static uint8_t			process_nonterminal(t_lex_object *obj, t_lexer_ir *ir, char **l
 	key = ft_strsub(*line, 0, keylen);
 	if (key)
 	{
-		if (ft_strcmp(obj->nonterminal, key) == 0)
-			def = lexer_definition_create(NONTERMINAL, NULL, obj);
-		else
-			def = lexer_definition_create(NONTERMINAL, NULL, find_lex_obj(ir, key));
+		def = ft_strcmp(obj->nonterminal, key) == 0 ?
+				lexer_definition_create(NONTERMINAL, NULL, obj) : 
+				lexer_definition_create(NONTERMINAL, NULL, find_lex_obj(ir, key));
 		if (def)
 		{
 			logger(INFO, 3, "lexer_generator", "adding nonterminal to definition", key);
 			vector(&obj->definitions, V_PUSHBACK, 0, def);
 		}
 		else
+		{
 			logger(WARN, 3, "lexer_generator", "can't find nonterminal for key", key);
+			// add to post stack here
+		}
 		free(key);
 	}
 	else

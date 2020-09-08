@@ -55,10 +55,11 @@ t_lexer_ir			*lexer_generator(const char *bnf_fpath);
 /*
 ** internal functions
 */
-t_lexer_ir			*lexer_generator_create();
-t_lexer_ir			*lexer_generator_destroy(t_lexer_ir *ir);
 
 t_lexer_ir			*lexer_generator_create_ir(t_lexer_ir *ir, int fd);
+
+t_lexer_ir			*lexer_generator_create();
+t_lexer_ir			*lexer_generator_destroy(t_lexer_ir *ir);
 
 t_lex_object		*process_new_nonterminal(t_lexer_ir *ir, char **line);
 uint8_t				process_definitions(t_lexer_ir *ir, t_lex_object *obj, char **line);
