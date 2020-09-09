@@ -27,7 +27,7 @@ t_lex_object	*lexer_object_destroy(t_lex_object *obj)
 		lexer_definition_destroy(vector(&obj->definitions, V_PEEKBACK, 0, NULL));
 		vector(&obj->definitions, V_POPBACK, 0, NULL);
 	}
-	vector(&obj->definitions, V_DESTROY, 0, NULL);
+	vector(&obj->definitions, V_DESTROY, false, NULL);
 	free(obj->nonterminal);
 	free(obj);
 	return (NULL);

@@ -19,7 +19,7 @@ t_node		*node_new(void)
 	node = ft_calloc(sizeof(t_node), 1);
 	if (node)
 	{
-		node->children = (t_node *)vector(&node->children, V_CREATE,
+		node->children = vector(&node->children, V_CREATE,
 							NODE_DEFAULT_CHILDREN, NULL);
 		if (!node->children)
 		{

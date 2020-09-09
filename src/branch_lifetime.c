@@ -14,14 +14,12 @@
 
 t_node	*branch_destroy(t_node *root)
 {
-	t_node	*node;
-
 	while (*(size_t *)vector(&root->children, V_SIZE, 0, NULL) > 0)
 	{
-		node = vector(&root->children, V_PEEKBACK, 0, NULL);
-		branch_destroy(node);
+		branch_destroy(vector(&root->children, V_PEEKBACK, 0, NULL));
 		vector(&root->children, V_POPBACK, 0, NULL);
 	}
+	vector(&root->children, V_DESTROY, false, NULL);
 	free(root);
 	return (NULL);
 }

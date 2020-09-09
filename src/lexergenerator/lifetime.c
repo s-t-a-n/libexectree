@@ -39,7 +39,7 @@ t_lexer_ir		*lexer_generator_destroy(t_lexer_ir *ir)
 		lexer_object_destroy(vector(&ir->vec_lex_objects, V_PEEKBACK, 0, NULL));
 		vector(&ir->vec_lex_objects, V_POPBACK, 0, NULL);
 	}
-	vector(&ir->vec_lex_objects, V_DESTROY, 0, NULL);
+	vector(&ir->vec_lex_objects, V_DESTROY, false, NULL);
 	free(ir);
 	return(NULL);
 }
