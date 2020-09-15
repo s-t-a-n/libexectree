@@ -16,25 +16,25 @@
 #include "logger.h"
 #include "lexergenerator.h"
 
-static t_lex_object		*find_lex_obj(t_lexer_ir *ir, char *key)
+static t_lex_node		*find_lex_obj(t_lexer_ir *ir, char *key)
 {
-	t_lex_object		*obj;
+	t_lex_node		*obj;
 	size_t				i;
 
-	i = *(size_t *)vector(&ir->vec_lex_objects, V_SIZE, 0, NULL);
+	i = *(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL);
 	while (i > 0)
 	{
-		obj = vector(&ir->vec_lex_objects, V_PEEKAT, i - 1, NULL);
+		obj = vector(&ir->nodes, V_PEEKAT, i - 1, NULL);
 		if (ft_strcmp(obj->nonterminal, key) == 0)
 			return(obj);
 		i--;
 	}
-	// if no candidate was found, push the required object to a post fix vector so we
+	// if no candidate was found, push the required node to a post fix vector so we
 	// can add the candidate later, or return error
 	return (NULL);
 }
 
-static uint8_t			process_nonterminal(t_lex_object *obj, t_lexer_ir *ir, char **line)
+static uint8_t			process_nonterminal(t_lex_node *obj, t_lexer_ir *ir, char **line)
 {
 	t_lex_definition	*def;
 	char				*key;
@@ -65,7 +65,7 @@ static uint8_t			process_nonterminal(t_lex_object *obj, t_lexer_ir *ir, char **l
 	return (1);
 }
 
-static uint8_t			process_literal(t_lex_object *obj, char **line)
+static uint8_t			process_literal(t_lex_node *obj, char **line)
 {
 	t_lex_definition	*def;
 	char				*word;
@@ -92,7 +92,7 @@ static uint8_t			process_literal(t_lex_object *obj, char **line)
 	return (1);
 }
 
-static uint8_t			process_word(t_lex_object *obj, char **line)
+static uint8_t			process_word(t_lex_node *obj, char **line)
 {
 	t_lex_definition	*def;
 	char				*word;
@@ -119,7 +119,7 @@ static uint8_t			process_word(t_lex_object *obj, char **line)
 }
 
 uint8_t					process_definitions(t_lexer_ir *ir,
-											t_lex_object *obj,
+											t_lex_node *obj,
 											char **line)
 {
 	*line = ft_strscan(*line);

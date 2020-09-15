@@ -14,7 +14,7 @@
 
 t_lex_definition	*lexer_definition_create(	t_lex_definition_type type,
 												char *terminal,
-												t_lex_object *nonterminal)
+												t_lex_node *nonterminal)
 {
 	t_lex_definition *def;
 

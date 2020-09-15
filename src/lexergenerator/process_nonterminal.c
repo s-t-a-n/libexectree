@@ -16,25 +16,25 @@
 #include "logger.h"
 #include "lexergenerator.h"
 
-t_lex_object		*process_new_nonterminal(t_lexer_ir *ir, char **line)
+t_lex_node		*process_new_nonterminal(t_lexer_ir *ir, char **line)
 {
-	t_lex_object	*obj;
+	t_lex_node	*node;
 	char			*key;
 	size_t			keylen;
 
 	keylen = ft_strclen(*line, '>');
 	if ((key = ft_strsub(*line, 0, keylen)))
 	{
-		if ((obj = lexer_object_create(key)))
+		if ((node = lexer_node_create(key)))
 		{
-			if (vector(&ir->vec_lex_objects, V_PUSHBACK, 0, obj))
+			if (vector(&ir->nodes, V_PUSHBACK, 0, node))
 			{
-				logger(INFO, 3, "lexer_generator", "Pushing non-terminal", obj->nonterminal);
+				logger(INFO, 3, "lexer_generator", "Pushing non-terminal", node->nonterminal);
 				*line += ft_strclen(*line, '=');
 				ir->size++;
-				return(obj);
+				return(node);
 			}
-			return(lexer_object_destroy(obj));
+			return(lexer_node_destroy(node));
 		}
 		free(key);
 	}

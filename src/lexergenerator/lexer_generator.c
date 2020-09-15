@@ -24,17 +24,17 @@
 
 static uint8_t	parse_line(t_lexer_ir *ir, char *line)
 {
-	static t_lex_object *obj;
+	static t_lex_node *node;
 
 	if (!*line || *line == '#')
 		return 1;
 	if (line[0] == '<')
 	{
 		line++;
-		if (!(obj = process_new_nonterminal(ir, &line)))
+		if (!(node = process_new_nonterminal(ir, &line)))
 			return (0);
 	}
-	return(process_definitions(ir, obj, &line));
+	return(process_definitions(ir, node, &line));
 }
 
 t_lexer_ir		*lexer_generator(const char *bnf_fpath)

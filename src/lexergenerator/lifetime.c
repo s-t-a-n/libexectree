@@ -23,7 +23,7 @@ t_lexer_ir		*lexer_generator_create()
 	ir = ft_calloc(sizeof(t_lexer_ir), 1);
 	if (ir)
 	{
-		if (!vector(&ir->vec_lex_objects, V_CREATE, VEC_DEF_SIZE, NULL))
+		if (!vector(&ir->nodes, V_CREATE, VEC_DEF_SIZE, NULL))
 		{
 			free(ir);
 			return (NULL);
@@ -34,12 +34,12 @@ t_lexer_ir		*lexer_generator_create()
 
 t_lexer_ir		*lexer_generator_destroy(t_lexer_ir *ir)
 {
-	while (*(size_t *)vector(&ir->vec_lex_objects, V_SIZE, 0, NULL) > 0)
+	while (*(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL) > 0)
 	{
-		lexer_object_destroy(vector(&ir->vec_lex_objects, V_PEEKBACK, 0, NULL));
-		vector(&ir->vec_lex_objects, V_POPBACK, 0, NULL);
+		lexer_node_destroy(vector(&ir->nodes, V_PEEKBACK, 0, NULL));
+		vector(&ir->nodes, V_POPBACK, 0, NULL);
 	}
-	vector(&ir->vec_lex_objects, V_DESTROY, false, NULL);
+	vector(&ir->nodes, V_DESTROY, false, NULL);
 	free(ir);
 	return(NULL);
 }

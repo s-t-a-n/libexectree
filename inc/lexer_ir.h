@@ -2,31 +2,40 @@
 #ifndef LEXER_IR_H
 # define LEXER_IR_H
 
-typedef enum		s_lex_definition_type
+typedef enum				s_lex_definition_type
 {
 	NONTERMINAL,
 	TERMINAL
-}					t_lex_definition_type;
+}							t_lex_definition_type;
 
-typedef struct		s_lex_definition
+/*
+** sig can be a reference to a definition or be a charstring
+** signifying a terminal
+*/
+typedef struct				s_lex_token
 {
-	t_lex_definition_type type;
-	char			*terminal;
-	void			*nonterminal;
-}					t_lex_definition;
+	t_lex_definition_type	type;
+	void					*sig;
+}							t_lex_token;
 
-typedef struct		s_lex_object
+typedef struct				s_lex_definition
 {
-	char			*nonterminal;
-	void			*definitions;
-}					t_lex_object;
+	t_lex_definition_type	type;
+	void					*tokens;
+}							t_lex_definition;
 
-typedef struct		s_lexer_ir
+typedef struct				s_lex_node
 {
-	void			*vec_lex_objects;
-	unsigned int	size;
-}					t_lexer_ir;
+	char					*nonterminal;
+	void					*definitions;
+}							t_lex_node;
 
-t_lexer_ir			*lexer_generator(const char *bnf_fpath);
-t_lexer_ir			*lexer_generator_destroy(t_lexer_ir *ir);
+typedef struct				s_lexer_ir
+{
+	void					*nodes;
+	unsigned int			size;
+}							t_lexer_ir;
+
+t_lexer_ir					*lexer_generator(const char *bnf_fpath);
+t_lexer_ir					*lexer_generator_destroy(t_lexer_ir *ir);
 #endif
