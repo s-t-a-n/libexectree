@@ -38,6 +38,7 @@ t_lex_definition	*lexer_definition_destroy(t_lex_definition *def)
 			lexer_token_destroy(vector(&def->tokens, V_PEEKBACK, 0, NULL));
 			vector(&def->tokens, V_POPBACK, 0, NULL);
 		}
+		vector(&def->tokens, V_DESTROY, 0, NULL);
 	}
 	free(def);
 	return(NULL);
