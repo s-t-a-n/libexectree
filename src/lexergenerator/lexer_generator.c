@@ -6,9 +6,13 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/05 18:08:53 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/06 18:19:24 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/15 22:30:17 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifdef DEBUG
+# include <assert.h>
+#endif
 
 #include "libft.h"
 #include "get_next_line.h"
@@ -34,6 +38,9 @@ static uint8_t	parse_line(t_lexer_ir *ir, char *line)
 		if (!(node = process_new_nonterminal(ir, &line)))
 			return (0);
 	}
+#ifdef DEBUG
+	assert(node);
+#endif
 	return(process_definitions(ir, node, &line));
 }
 

@@ -2,6 +2,15 @@
 #ifndef LEXER_IR_H
 # define LEXER_IR_H
 
+/*
+** To protect sanity:
+** An intermediate representation of the formal syntax grammer (as supplied
+** by an BNF file) consists of a vector of nodes which each define one
+** non-terminal. These non-terminal are then each defined as a vector of
+** definitions. Each definition is then defined as a vector of 'tokens'
+** which could be a non-terminal or terminal
+*/
+
 typedef enum				s_lex_definition_type
 {
 	NONTERMINAL,
@@ -20,7 +29,6 @@ typedef struct				s_lex_token
 
 typedef struct				s_lex_definition
 {
-	t_lex_definition_type	type;
 	void					*tokens;
 }							t_lex_definition;
 

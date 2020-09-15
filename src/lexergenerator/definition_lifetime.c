@@ -6,33 +6,39 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/06 18:28:15 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/06 18:32:21 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/15 22:20:41 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "vector.h"
 #include "lexergenerator.h"
 
-t_lex_definition	*lexer_definition_create(	t_lex_definition_type type,
-												char *terminal,
-												t_lex_node *nonterminal)
+t_lex_definition	*lexer_definition_create(void)
 {
 	t_lex_definition *def;
 
-	if (!terminal)
-		return(NULL);
 	def = malloc(sizeof(t_lex_definition));
 	if (def)
 	{
-		def->type = type;
-		def->terminal = terminal;
-		def->nonterminal = nonterminal;
+		if (!vector(&def->tokens, V_CREATE, VEC_DEF_SIZE, NULL))
+		{
+			free(def);
+			return (NULL);
+		}
 	}
 	return(def);
 }
 
 t_lex_definition	*lexer_definition_destroy(t_lex_definition *def)
 {
-	free(def->terminal);
+	if (def)
+	{
+		while (*(size_t *)vector(&def->tokens, V_SIZE, 0, NULL) > 0)
+		{
+			lexer_token_destroy(vector(&def->tokens, V_PEEKBACK, 0, NULL));
+			vector(&def->tokens, V_POPBACK, 0, NULL);
+		}
+	}
 	free(def);
 	return(NULL);
 }

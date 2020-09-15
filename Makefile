@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/06 19:48:31 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/15 22:17:51 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,8 @@ LG_SRC =$(SRC_D)/lexergenerator/lexer_generator.c							\
 		$(SRC_D)/lexergenerator/process_nonterminal.c						\
 		$(SRC_D)/lexergenerator/process_definitions.c						\
 		$(SRC_D)/lexergenerator/definition_lifetime.c						\
-		$(SRC_D)/lexergenerator/node_lifetime.c							\
+		$(SRC_D)/lexergenerator/node_lifetime.c								\
+		$(SRC_D)/lexergenerator/token_lifetime.c							\
 
 LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
