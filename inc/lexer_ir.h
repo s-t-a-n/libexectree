@@ -45,5 +45,7 @@ typedef struct				s_lexer_ir
 }							t_lexer_ir;
 
 t_lexer_ir					*lexer_generator(const char *bnf_fpath);
+void						lexer_generator_dump(t_lexer_ir *ir);
 t_lexer_ir					*lexer_generator_destroy(t_lexer_ir *ir);
+
 #endif
