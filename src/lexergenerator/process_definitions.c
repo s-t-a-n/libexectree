@@ -50,8 +50,15 @@ static uint8_t			process_nonterminal(t_lex_node *node, t_lex_definition *def, t_
 				lexer_token_create(NONTERMINAL, find_lex_node(ir, key));
 		if (token)
 		{
-			logger(INFO, 3, "lexer_generator", "adding nonterminal to definition", key);
-			vector(&def->tokens, V_PUSHBACK, 0, token);
+			if (vector(&def->tokens, V_PUSHBACK, 0, token))
+			{
+				logger(INFO, 3, "lexer_generator", "adding nonterminal to definition", key);
+				(*line) += keylen + (*(*line + keylen) ? 1 : 0);
+				free(key);
+				return (1);
+			}
+			else
+				lexer_token_destroy(token);
 		}
 		else
 		{
@@ -60,9 +67,7 @@ static uint8_t			process_nonterminal(t_lex_node *node, t_lex_definition *def, t_
 		}
 		free(key);
 	}
-	else
-		return(0);
-	return (1);
+	return (0);
 }
 
 static uint8_t			process_literal(t_lex_definition *def, char **line)
@@ -99,7 +104,7 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 	size_t				wordlen;
 
 	wordlen = 0;
-	while(ft_isalnum(*(*line + wordlen)))
+	while(*(*line + wordlen) && *(*line + wordlen) != ' ') // used isalnum before
 		wordlen++;
 	word = ft_strsub(*line, 0, wordlen);
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
@@ -134,13 +139,14 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 			*line = ft_strscan(*line);
 			while(**line)
 			{
-				// right now this just dumps everything seperately : definitions should be self contained -> read untill '|' 
+				printf("first char : %c\n", **line);
 				if (**line == '\'')
 					process_literal(def, line);
 				else if (**line == '<')
 					process_nonterminal(node, def, ir, line);
 				else if (ft_isalnum(**line))
 					process_word(def, line);
+				printf("last char : %c\n", **line);
 				*line = ft_strscan(*line);
 			}
 			vector(&node->definitions, V_PUSHBACK, 0, def);
