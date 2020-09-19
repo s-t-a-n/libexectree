@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_generator_lifetime.c                         :+:    :+:            */
+/*   lexer_ir_lifetime.c                                :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/05 18:28:05 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/06 17:51:20 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/19 22:10:48 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/19 22:10:50 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,15 @@ t_lexer_ir		*lexer_generator_create()
 
 t_lexer_ir		*lexer_generator_destroy(t_lexer_ir *ir)
 {
-	while (*(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL) > 0)
+	if (ir)
 	{
-		lexer_node_destroy(vector(&ir->nodes, V_PEEKBACK, 0, NULL));
-		vector(&ir->nodes, V_POPBACK, 0, NULL);
+		while (*(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL) > 0)
+		{
+			lexer_node_destroy(vector(&ir->nodes, V_PEEKBACK, 0, NULL));
+			vector(&ir->nodes, V_POPBACK, 0, NULL);
+		}
+		vector(&ir->nodes, V_DESTROY, false, NULL);
 	}
-	vector(&ir->nodes, V_DESTROY, false, NULL);
 	free(ir);
 	return(NULL);
 }

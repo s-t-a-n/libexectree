@@ -1,40 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   token_lifetime.c                                   :+:    :+:            */
+/*   search.c                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/15 22:14:09 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 21:24:18 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/19 22:11:14 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/19 22:12:45 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
+#include "libft.h"
+
 #include "lexergenerator.h"
 
-t_lex_token	*lexer_token_create(t_lex_definition_type type, void *sig)
+t_lex_node			*lexer_find_node(t_lexer_ir *ir, char *key)
 {
-	t_lex_token *token;
+	t_lex_node		*node;
+	size_t				i;
 
-	if (sig == NULL)
-		return (NULL);
-	token = malloc(sizeof(t_lex_token));
-	if (token)
+	i = *(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL);
+	while (i > 0)
 	{
-		token->type = type;
-		token->sig = sig;
+		node = vector(&ir->nodes, V_PEEKAT, i - 1, NULL);
+		if (ft_strcmp(node->nonterminal, key) == 0)
+			return(node);
+		i--;
 	}
-	return (token);
-}
-
-t_lex_token		*lexer_token_destroy(t_lex_token *token)
-{
-	if (token
-		&& (token->type == TERMINAL || token->type == UNKNOWN_NONTERMINAL))
-	{
-		free(token->sig);
-	}
-	free(token);
 	return (NULL);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_generator.c                                  :+:    :+:            */
+/*   lexer_ir.c                                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/05 18:08:53 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/15 22:30:17 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/19 22:10:44 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/19 22:10:46 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ static uint8_t	parse_line(t_lexer_ir *ir, char *line)
 	static t_lex_node *node;
 
 	if (!*line || *line == '#')
-		return 1;
+		return (0);
 	if (line[0] == '<')
 	{
 		line++;
 		if (!(node = process_new_nonterminal(ir, &line)))
-			return (0);
+			return (1);
 	}
 #ifdef DEBUG
 	assert(node);
@@ -56,7 +56,7 @@ t_lexer_ir		*lexer_generator(const char *bnf_fpath)
 		{
 			while(get_next_line(fd, &line))
 			{
-				if (!parse_line(ir, line))
+				if (parse_line(ir, line) != 0)
 				{
 					free(line);
 					close(fd);
@@ -68,6 +68,8 @@ t_lexer_ir		*lexer_generator(const char *bnf_fpath)
 			close(fd);
 		}
 		else
+			return(lexer_generator_destroy(ir));
+		if (lexer_post_process(ir) != 0)
 			return(lexer_generator_destroy(ir));
 	}
 	return (ir);

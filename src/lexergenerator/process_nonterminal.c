@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_generator_process_nonterminal.c              :+:    :+:            */
+/*   process_nonterminal.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/06 17:45:26 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/06 18:19:11 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/19 22:11:09 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/19 22:11:10 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

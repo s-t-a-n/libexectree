@@ -2,6 +2,8 @@
 #ifndef LEXER_IR_H
 # define LEXER_IR_H
 
+#include "libft.h"
+
 /*
 ** To protect sanity:
 ** An intermediate representation of the formal syntax grammer (as supplied
@@ -14,6 +16,7 @@
 typedef enum				s_lex_definition_type
 {
 	NONTERMINAL,
+	UNKNOWN_NONTERMINAL,
 	TERMINAL
 }							t_lex_definition_type;
 
@@ -41,11 +44,15 @@ typedef struct				s_lex_node
 typedef struct				s_lexer_ir
 {
 	void					*nodes;
+	t_list					*post;
 	unsigned int			size;
 }							t_lexer_ir;
+
 
 t_lexer_ir					*lexer_generator(const char *bnf_fpath);
 void						lexer_generator_dump(t_lexer_ir *ir);
 t_lexer_ir					*lexer_generator_destroy(t_lexer_ir *ir);
+
+t_lex_node					*lexer_find_node(t_lexer_ir *ir, char *key);
 
 #endif

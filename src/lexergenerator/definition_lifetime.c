@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_generator_definition_lifetime.c              :+:    :+:            */
+/*   definition_lifetime.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/06 18:28:15 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/15 22:20:41 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/19 22:10:34 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/19 22:10:36 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

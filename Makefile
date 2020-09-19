@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/15 22:17:51 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/19 22:14:35 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,14 +42,16 @@ LOG_SRC=$(SRC_D)/logger/logger.c											\
 LOG_OBJ :=	$(LOG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### lexer generator source files
-LG_SRC =$(SRC_D)/lexergenerator/lexer_generator.c							\
-		$(SRC_D)/lexergenerator/lifetime.c									\
+LG_SRC =$(SRC_D)/lexergenerator/lexer_ir.c									\
+		$(SRC_D)/lexergenerator/lexer_ir_lifetime.c							\
 		$(SRC_D)/lexergenerator/process_nonterminal.c						\
 		$(SRC_D)/lexergenerator/process_definitions.c						\
 		$(SRC_D)/lexergenerator/definition_lifetime.c						\
 		$(SRC_D)/lexergenerator/node_lifetime.c								\
 		$(SRC_D)/lexergenerator/token_lifetime.c							\
-		$(SRC_D)/lexergenerator/lexer_dump.c								\
+		$(SRC_D)/lexergenerator/dump.c										\
+		$(SRC_D)/lexergenerator/search.c									\
+		$(SRC_D)/lexergenerator/post_processing.c							\
 
 LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 

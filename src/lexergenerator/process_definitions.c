@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_generator_process_definitions.c              :+:    :+:            */
+/*   process_definitions.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/06 17:44:39 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/15 22:33:35 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/19 22:11:03 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/19 22:12:55 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,6 @@
 #include "logger.h"
 #include "lexergenerator.h"
 
-static t_lex_node		*find_lex_node(t_lexer_ir *ir, char *key)
-{
-	t_lex_node		*node;
-	size_t				i;
-
-	i = *(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL);
-	while (i > 0)
-	{
-		node = vector(&ir->nodes, V_PEEKAT, i - 1, NULL);
-		if (ft_strcmp(node->nonterminal, key) == 0)
-			return(node);
-		i--;
-	}
-	// if no candidate was found, push the required node to a post fix vector so we
-	// can add the candidate later, or return error
-	return (NULL);
-}
-
 static uint8_t			process_nonterminal(t_lex_node *node, t_lex_definition *def, t_lexer_ir *ir, char **line)
 {
 	t_lex_token			*token;
@@ -42,32 +24,30 @@ static uint8_t			process_nonterminal(t_lex_node *node, t_lex_definition *def, t_
 
 	(*line)++;
 	keylen = ft_strclen(*line, '>');
-	key = ft_strsub(*line, 0, keylen);
-	if (key)
+	if ((key = ft_strsub(*line, 0, keylen)))
 	{
-		token = ft_strcmp(node->nonterminal, key) == 0 ?
-				lexer_token_create(NONTERMINAL, node) : 
-				lexer_token_create(NONTERMINAL, find_lex_node(ir, key));
+		if (ft_strcmp(node->nonterminal, key) == 0)
+			token = lexer_token_create(NONTERMINAL, node);
+		else if ((node = lexer_find_node(ir, key)))
+			token = lexer_token_create(NONTERMINAL, node);
+		else if ((token = lexer_token_create(UNKNOWN_NONTERMINAL, ft_strdup(key))))
+			lst_addback(&ir->post, token);
+		else
+			token = NULL;
 		if (token)
 		{
 			if (vector(&def->tokens, V_PUSHBACK, 0, token))
 			{
-				logger(INFO, 3, "lexer_generator", "adding nonterminal to definition", key);
+				logger(INFO, 4, "lexer_generator", "adding nonterminal to definition", key, node ? "" : " : adding to Post!");
 				(*line) += keylen + (*(*line + keylen) ? 1 : 0);
 				free(key);
-				return (1);
+				return (0);
 			}
-			else
-				lexer_token_destroy(token);
 		}
-		else
-		{
-			logger(WARN, 3, "lexer_generator", "can't find nonterminal for key", key);
-			// add to post stack here
-		}
+		lexer_token_destroy(token);
 		free(key);
 	}
-	return (0);
+	return (1);
 }
 
 static uint8_t			process_literal(t_lex_definition *def, char **line)
@@ -85,14 +65,13 @@ static uint8_t			process_literal(t_lex_definition *def, char **line)
 	if (word)
 	{
 		token = lexer_token_create(TERMINAL, word);
-		if (!(token && vector(&def->tokens, V_PUSHBACK, 0, token)))
+		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
 		{
-			free(token);
-			free(word);
+			logger(INFO, 3, "lexer_generator", "adding (literal) terminal to definition", word);
 			return (0);
 		}
-		else
-			logger(INFO, 3, "lexer_generator", "adding (literal) terminal to definition", word);
+		free(token);
+		free(word);
 	}
 	return (1);
 }
@@ -110,15 +89,14 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
 	if (word)
 	{
-		logger(INFO, 3, "lexer_generator", "adding (word) terminal to definition", word);
 		token = lexer_token_create(TERMINAL, word);
-		if (def)
-			vector(&def->tokens, V_PUSHBACK, 0, token);
-		else
+		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
 		{
-			free(word);
+			logger(INFO, 3, "lexer_generator", "adding (word) terminal to definition", word);
 			return (0);
 		}
+		free(word);
+		lexer_token_destroy(token);
 	}
 	return (1);
 }
@@ -127,9 +105,11 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 											t_lex_node *node,
 											char **line)
 {
+	uint8_t				errors;
 	t_lex_definition	*def;
 
 	*line = ft_strscan(*line);
+	errors = 0;
 	if (**line == '|' || **line == '=')
 	{
 		def = lexer_definition_create();
@@ -139,22 +119,19 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 			*line = ft_strscan(*line);
 			while(**line)
 			{
-				printf("first char : %c\n", **line);
 				if (**line == '\'')
-					process_literal(def, line);
+					errors += process_literal(def, line);
 				else if (**line == '<')
-					process_nonterminal(node, def, ir, line);
+					errors += process_nonterminal(node, def, ir, line);
 				else if (ft_isalnum(**line))
-					process_word(def, line);
-				printf("last char : %c\n", **line);
+					errors += process_word(def, line);
 				*line = ft_strscan(*line);
 			}
-			vector(&node->definitions, V_PUSHBACK, 0, def);
+			if (!vector(&node->definitions, V_PUSHBACK, 0, def))
+				lexer_definition_destroy(def);
 		}
-		else
-			return (0);
 	}
 	else
 		logger(WARN, 3, "lexer_generator", "Line doesn't start with '|' or '='", *line);
-	return (1);
+	return (errors);
 }

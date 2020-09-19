@@ -32,4 +32,6 @@ t_lex_definition	*lexer_definition_destroy(t_lex_definition *def);
 t_lex_token			*lexer_token_create(t_lex_definition_type type, void *sig);
 t_lex_token			*lexer_token_destroy(t_lex_token *token);
 
+uint8_t				lexer_post_process(t_lexer_ir *ir);
+
 #endif
