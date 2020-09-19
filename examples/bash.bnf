@@ -80,14 +80,11 @@
                    |  select <word> <newline_list> '{' <list> '}'
                    |  select <word> ';' <newline_list> do <list> done
                    |  select <word> ';' <newline_list> '{' list '}'
-                   |  select <word> <newline_list> in <word_list>
-                           <list_terminator> <newline_list> do <list> done
-                   |  select <word> <newline_list> in <word_list>
-                           <list_terminator> <newline_list> '{' <list> '}'
+                   |  select <word> <newline_list> in <word_list> <list_terminator> <newline_list> do <list> done
+                   |  select <word> <newline_list> in <word_list> <list_terminator> <newline_list> '{' <list> '}'
 
 <case_command> ::=  case <word> <newline_list> in <newline_list> esac
-                 |  case <word> <newline_list> in <case_clause_sequence>
-                         <newline_list> esac
+                 |  case <word> <newline_list> in <case_clause_sequence> <newline_list> esac
                  |  case <word> <newline_list> in <case_clause> esac
 
 <function_def> ::=  <word> '(' ')' <newline_list> <group_command>
@@ -158,8 +155,7 @@
                     |  <timespec> '!' <pipeline>
                     |  '!' <timespec> <pipeline>
 
-<pipeline> ::=
-          <pipeline> '|' <newline_list> <pipeline>
+<pipeline> ::= <pipeline> '|' <newline_list> <pipeline>
        |  <command>
 
 <time_opt> ::= '-p'
