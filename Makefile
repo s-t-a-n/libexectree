@@ -49,6 +49,7 @@ LG_SRC =$(SRC_D)/lexergenerator/lexer_generator.c							\
 		$(SRC_D)/lexergenerator/definition_lifetime.c						\
 		$(SRC_D)/lexergenerator/node_lifetime.c								\
 		$(SRC_D)/lexergenerator/token_lifetime.c							\
+		$(SRC_D)/lexergenerator/lexer_dump.c								\
 
 LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
