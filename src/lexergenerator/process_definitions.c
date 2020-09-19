@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:11:03 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:12:55 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 22:44:39 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@
 #include "logger.h"
 #include "lexergenerator.h"
 
-static uint8_t			process_nonterminal(t_lex_node *node, t_lex_definition *def, t_lexer_ir *ir, char **line)
+static uint8_t			process_nonterminal(t_lex_node *node,
+											t_lex_definition *def,
+											t_lexer_ir *ir,
+											char **line)
 {
 	t_lex_token			*token;
 	char				*key;
@@ -38,7 +41,10 @@ static uint8_t			process_nonterminal(t_lex_node *node, t_lex_definition *def, t_
 		{
 			if (vector(&def->tokens, V_PUSHBACK, 0, token))
 			{
-				logger(INFO, 4, "lexer_generator", "adding nonterminal to definition", key, node ? "" : " : adding to Post!");
+				logger(INFO, node ? 3 : 4,
+							"lexer_generator",
+							"adding nonterminal to definition",
+							key, node ? "" : "adding to Post!");
 				(*line) += keylen + (*(*line + keylen) ? 1 : 0);
 				free(key);
 				return (0);
@@ -58,7 +64,7 @@ static uint8_t			process_literal(t_lex_definition *def, char **line)
 
 	(*line)++;
 	wordlen = 0;
-	while(*(*line + wordlen) != '\'' || *(*line + wordlen - 1) == '\\')
+	while (*(*line + wordlen) != '\'' || *(*line + wordlen - 1) == '\\')
 		wordlen++;
 	word = ft_strsub(*line, 0, wordlen);
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
@@ -67,7 +73,9 @@ static uint8_t			process_literal(t_lex_definition *def, char **line)
 		token = lexer_token_create(TERMINAL, word);
 		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
 		{
-			logger(INFO, 3, "lexer_generator", "adding (literal) terminal to definition", word);
+			logger(INFO, 3, "lexer_generator",
+							"adding (literal) terminal to definition",
+							word);
 			return (0);
 		}
 		free(token);
@@ -83,7 +91,7 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 	size_t				wordlen;
 
 	wordlen = 0;
-	while(*(*line + wordlen) && *(*line + wordlen) != ' ') // used isalnum before
+	while (*(*line + wordlen) && *(*line + wordlen) != ' ')
 		wordlen++;
 	word = ft_strsub(*line, 0, wordlen);
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
@@ -92,7 +100,9 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 		token = lexer_token_create(TERMINAL, word);
 		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
 		{
-			logger(INFO, 3, "lexer_generator", "adding (word) terminal to definition", word);
+			logger(INFO, 3, "lexer_generator",
+							"adding (word) terminal to definition",
+							word);
 			return (0);
 		}
 		free(word);
@@ -117,7 +127,7 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 		{
 			(*line)++;
 			*line = ft_strscan(*line);
-			while(**line)
+			while (**line)
 			{
 				if (**line == '\'')
 					errors += process_literal(def, line);
@@ -132,6 +142,8 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 		}
 	}
 	else
-		logger(WARN, 3, "lexer_generator", "Line doesn't start with '|' or '='", *line);
+		logger(WARN, 3, "lexer_generator",
+						"Line doesn't start with '|' or '='",
+						*line);
 	return (errors);
 }

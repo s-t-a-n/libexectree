@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:48 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:10:50 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 22:38:59 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 #include "lexergenerator.h"
 
-t_lexer_ir		*lexer_generator_create()
+t_lexer_ir		*lexer_generator_create(void)
 {
 	t_lexer_ir	*ir;
 
@@ -44,5 +44,5 @@ t_lexer_ir		*lexer_generator_destroy(t_lexer_ir *ir)
 		vector(&ir->nodes, V_DESTROY, false, NULL);
 	}
 	free(ir);
-	return(NULL);
+	return (NULL);
 }

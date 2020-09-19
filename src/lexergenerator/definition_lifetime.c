@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:34 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:10:36 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 22:38:04 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_lex_definition	*lexer_definition_create(void)
 			return (NULL);
 		}
 	}
-	return(def);
+	return (def);
 }
 
 t_lex_definition	*lexer_definition_destroy(t_lex_definition *def)
@@ -41,5 +41,5 @@ t_lex_definition	*lexer_definition_destroy(t_lex_definition *def)
 		vector(&def->tokens, V_DESTROY, 0, NULL);
 	}
 	free(def);
-	return(NULL);
+	return (NULL);
 }

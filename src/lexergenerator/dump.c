@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:38 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:10:41 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 22:45:54 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	lexer_generator_dump(t_lexer_ir *ir)
 		printf("\n**** %s ****", node->nonterminal);
 		js = *(size_t *)vector(&node->definitions, V_SIZE, 0, NULL);
 		j = 0;
-		while(j < js)
+		while (j < js)
 		{
 			printf("%s", "\n| ");
 			def = vector(&node->definitions, V_PEEKAT, j, NULL);

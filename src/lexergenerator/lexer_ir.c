@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:44 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:10:46 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 22:40:17 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 ** simple top-down parser for extracting grammar rules from a BNF
 ** file. excuse the mess; 42 requires 'norminette' which is superrestrictive
 ** on function length (max 25 lines).
-*/ 
+*/
 
 static uint8_t	parse_line(t_lexer_ir *ir, char *line)
 {
@@ -41,7 +41,7 @@ static uint8_t	parse_line(t_lexer_ir *ir, char *line)
 #ifdef DEBUG
 	assert(node);
 #endif
-	return(process_definitions(ir, node, &line));
+	return (process_definitions(ir, node, &line));
 }
 
 t_lexer_ir		*lexer_generator(const char *bnf_fpath)
@@ -54,13 +54,13 @@ t_lexer_ir		*lexer_generator(const char *bnf_fpath)
 	{
 		if ((fd = open(bnf_fpath, O_RDONLY)) >= 0)
 		{
-			while(get_next_line(fd, &line))
+			while (get_next_line(fd, &line))
 			{
 				if (parse_line(ir, line) != 0)
 				{
 					free(line);
 					close(fd);
-					return(lexer_generator_destroy(ir));
+					return (lexer_generator_destroy(ir));
 				}
 				free(line);
 			}
@@ -68,9 +68,9 @@ t_lexer_ir		*lexer_generator(const char *bnf_fpath)
 			close(fd);
 		}
 		else
-			return(lexer_generator_destroy(ir));
+			return (lexer_generator_destroy(ir));
 		if (lexer_post_process(ir) != 0)
-			return(lexer_generator_destroy(ir));
+			return (lexer_generator_destroy(ir));
 	}
 	return (ir);
 }
