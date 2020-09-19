@@ -13,7 +13,7 @@
          | <word> '_'
 
 <word_list> ::= <word>
-             |  <word_list> <word>
+              |  <word_list> <word>
 
 <assignment_word> ::= <word> '=' <word>
 
@@ -46,11 +46,11 @@
                 |  <number> '>|' <word>
 
 <simple_command_element> ::= <word>
-                          |  <assignment_word>
-                          |  <redirection>
+                           |  <assignment_word>
+                           |  <redirection>
 
 <redirection_list> ::= <redirection>
-                    |  <redirection_list> <redirection>
+                     |  <redirection_list> <redirection>
 
 <simple_command> ::=  <simple_command_element>
                    |  <simple_command> <simple_command_element>
@@ -94,14 +94,14 @@
 <subshell> ::=  '(' <compound_list> ')'
 
 <if_command> ::= if <compound_list> then <compound_list> fi
-          | if <compound_list> then <compound_list> else <compound_list> fi
-          | if <compound_list> then <compound_list> <elif_clause> fi
+               | if <compound_list> then <compound_list> else <compound_list> fi
+               | if <compound_list> then <compound_list> <elif_clause> fi
 
 <group_command> ::=  '{' <list> '}'
 
 <elif_clause> ::= elif <compound_list> then <compound_list>
-           | elif <compound_list> then <compound_list> else <compound_list>
-           | elif <compound_list> then <compound_list> <elif_clause>
+                | elif <compound_list> then <compound_list> else <compound_list>
+                | elif <compound_list> then <compound_list> <elif_clause>
 
 <case_clause> ::=  <pattern_list>
                 |  <case_clause_sequence> <pattern_list>
@@ -123,21 +123,21 @@
                   |  <newline_list> <list1>
 
 <list0> ::=   <list1> '\n' <newline_list>
-           |  <list1> '&' <newline_list>
-           |  <list1> ';' <newline_list>
+          |  <list1> '&' <newline_list>
+          |  <list1> ';' <newline_list>
 
 <list1> ::=   <list1> '&&' <newline_list> <list1>
-           |  <list1> '||' <newline_list> <list1>
-           |  <list1> '&' <newline_list> <list1>
-           |  <list1> ';' <newline_list> <list1>
-           |  <list1> '\n' <newline_list> <list1>
-           |  <pipeline_command>
+          |  <list1> '||' <newline_list> <list1>
+          |  <list1> '&' <newline_list> <list1>
+          |  <list1> ';' <newline_list> <list1>
+          |  <list1> '\n' <newline_list> <list1>
+          |  <pipeline_command>
 
 <list_terminator> ::= '\n'
-                   |  ';'
+                    |  ';'
 
 <newline_list> ::=
-                  |  <newline_list> '\n'
+                 |  <newline_list> '\n'
 
 <simple_list> ::=  <simple_list1>
                 |  <simple_list1> '&'
@@ -150,13 +150,13 @@
                  |  <pipeline_command>
 
 <pipeline_command> ::= <pipeline>
-                    |  '!' <pipeline>
-                    |  <timespec> <pipeline>
-                    |  <timespec> '!' <pipeline>
-                    |  '!' <timespec> <pipeline>
+                     |  '!' <pipeline>
+                     |  <timespec> <pipeline>
+                     |  <timespec> '!' <pipeline>
+                     |  '!' <timespec> <pipeline>
 
 <pipeline> ::= <pipeline> '|' <newline_list> <pipeline>
-       |  <command>
+             |  <command>
 
 <time_opt> ::= '-p'
 
