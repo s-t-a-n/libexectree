@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:11:09 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:45:23 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:52:22 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "logger.h"
 #include "lexergenerator.h"
 
-t_lex_node		*process_new_nonterminal(t_lexer_ir *ir, char **line)
+t_lex_node		*lexgen_process_new_nonterminal(t_lexer_ir *ir, char **line)
 {
 	t_lex_node	*node;
 	char		*key;
@@ -25,7 +25,7 @@ t_lex_node		*process_new_nonterminal(t_lexer_ir *ir, char **line)
 	keylen = ft_strclen(*line, '>');
 	if ((key = ft_strsub(*line, 0, keylen)))
 	{
-		if ((node = lexer_node_create(key)))
+		if ((node = lexgen_node_create(key)))
 		{
 			if (vector(&ir->nodes, V_PUSHBACK, 0, node))
 			{
@@ -36,7 +36,7 @@ t_lex_node		*process_new_nonterminal(t_lexer_ir *ir, char **line)
 				ir->size++;
 				return (node);
 			}
-			return (lexer_node_destroy(node));
+			return (lexgen_node_destroy(node));
 		}
 		free(key);
 	}

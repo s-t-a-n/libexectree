@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:11:03 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:44:39 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:53:07 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ static uint8_t			process_nonterminal(t_lex_node *node,
 	if ((key = ft_strsub(*line, 0, keylen)))
 	{
 		if (ft_strcmp(node->nonterminal, key) == 0)
-			token = lexer_token_create(NONTERMINAL, node);
-		else if ((node = lexer_find_node(ir, key)))
-			token = lexer_token_create(NONTERMINAL, node);
-		else if ((token = lexer_token_create(UNKNOWN_NONTERMINAL, ft_strdup(key))))
+			token = lexgen_token_create(NONTERMINAL, node);
+		else if ((node = lexer_ir_find_node(ir, key)))
+			token = lexgen_token_create(NONTERMINAL, node);
+		else if ((token = lexgen_token_create(UNKNOWN_NONTERMINAL, ft_strdup(key))))
 			lst_addback(&ir->post, token);
 		else
 			token = NULL;
@@ -50,7 +50,7 @@ static uint8_t			process_nonterminal(t_lex_node *node,
 				return (0);
 			}
 		}
-		lexer_token_destroy(token);
+		lexgen_token_destroy(token);
 		free(key);
 	}
 	return (1);
@@ -70,7 +70,7 @@ static uint8_t			process_literal(t_lex_definition *def, char **line)
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
 	if (word)
 	{
-		token = lexer_token_create(TERMINAL, word);
+		token = lexgen_token_create(TERMINAL, word);
 		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
 		{
 			logger(INFO, 3, "lexer_generator",
@@ -78,7 +78,7 @@ static uint8_t			process_literal(t_lex_definition *def, char **line)
 							word);
 			return (0);
 		}
-		free(token);
+		lexgen_token_destroy(token);
 		free(word);
 	}
 	return (1);
@@ -97,7 +97,7 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
 	if (word)
 	{
-		token = lexer_token_create(TERMINAL, word);
+		token = lexgen_token_create(TERMINAL, word);
 		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
 		{
 			logger(INFO, 3, "lexer_generator",
@@ -106,12 +106,12 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 			return (0);
 		}
 		free(word);
-		lexer_token_destroy(token);
+		lexgen_token_destroy(token);
 	}
 	return (1);
 }
 
-uint8_t					process_definitions(t_lexer_ir *ir,
+uint8_t					lexgen_process_definitions(t_lexer_ir *ir,
 											t_lex_node *node,
 											char **line)
 {
@@ -122,7 +122,7 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 	errors = 0;
 	if (**line == '|' || **line == '=')
 	{
-		def = lexer_definition_create();
+		def = lexgen_definition_create();
 		if (def)
 		{
 			(*line)++;
@@ -138,7 +138,7 @@ uint8_t					process_definitions(t_lexer_ir *ir,
 				*line = ft_strscan(*line);
 			}
 			if (!vector(&node->definitions, V_PUSHBACK, 0, def))
-				lexer_definition_destroy(def);
+				lexgen_definition_destroy(def);
 		}
 	}
 	else

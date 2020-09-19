@@ -6,14 +6,14 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:34 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:38:04 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:27:33 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
 #include "lexergenerator.h"
 
-t_lex_definition	*lexer_definition_create(void)
+t_lex_definition	*lexgen_definition_create(void)
 {
 	t_lex_definition *def;
 
@@ -29,13 +29,13 @@ t_lex_definition	*lexer_definition_create(void)
 	return (def);
 }
 
-t_lex_definition	*lexer_definition_destroy(t_lex_definition *def)
+t_lex_definition	*lexgen_definition_destroy(t_lex_definition *def)
 {
 	if (def)
 	{
 		while (*(size_t *)vector(&def->tokens, V_SIZE, 0, NULL) > 0)
 		{
-			lexer_token_destroy(vector(&def->tokens, V_PEEKBACK, 0, NULL));
+			lexgen_token_destroy(vector(&def->tokens, V_PEEKBACK, 0, NULL));
 			vector(&def->tokens, V_POPBACK, 0, NULL);
 		}
 		vector(&def->tokens, V_DESTROY, 0, NULL);

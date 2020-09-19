@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:53 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:38:33 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:37:28 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "vector.h"
 #include "lexergenerator.h"
 
-t_lex_node	*lexer_node_create(char *nonterminal)
+t_lex_node	*lexgen_node_create(char *nonterminal)
 {
 	t_lex_node *node;
 
@@ -31,13 +31,13 @@ t_lex_node	*lexer_node_create(char *nonterminal)
 	return (node);
 }
 
-t_lex_node	*lexer_node_destroy(t_lex_node *node)
+t_lex_node	*lexgen_node_destroy(t_lex_node *node)
 {
 	if (node)
 	{
 		while (*(size_t *)vector(&node->definitions, V_SIZE, 0, NULL) > 0)
 		{
-			lexer_definition_destroy(vector(&node->definitions, V_PEEKBACK, 0,
+			lexgen_definition_destroy(vector(&node->definitions, V_PEEKBACK, 0,
 																		NULL));
 			vector(&node->definitions, V_POPBACK, 0, NULL);
 		}

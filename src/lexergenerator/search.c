@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:11:14 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:40:49 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:40:30 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "lexergenerator.h"
 
-t_lex_node			*lexer_find_node(t_lexer_ir *ir, char *key)
+t_lex_node			*lexer_ir_find_node(t_lexer_ir *ir, char *key)
 {
 	t_lex_node		*node;
 	size_t			i;

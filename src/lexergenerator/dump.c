@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:38 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:45:54 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:51:54 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,23 @@
 #include "lexergenerator.h"
 
 /*
-void	lexer_token_dump(t_lex_token *token)
+void	lexgen_token_dump(t_lex_token *token)
 {
 
 }
 
-void	lexer_definition_dump(t_lex_definition *def)
+void	lexgen_definition_dump(t_lex_definition *def)
 {
 
 }
 
-void	lexer_node_dump(t_lex_node *node)
+void	lexgen_node_dump(t_lex_node *node)
 {
 
 }
 */
 
-void	lexer_generator_dump(t_lexer_ir *ir)
+void	lexer_ir_dump(t_lexer_ir *ir)
 {
 	size_t				i, j, js, k, ks;
 	t_lex_node			*node;

@@ -49,10 +49,11 @@ typedef struct				s_lexer_ir
 }							t_lexer_ir;
 
 
-t_lexer_ir					*lexer_generator(const char *bnf_fpath);
-void						lexer_generator_dump(t_lexer_ir *ir);
-t_lexer_ir					*lexer_generator_destroy(t_lexer_ir *ir);
+t_lexer_ir					*lexer_ir_generate(const char *bnf_fpath);
 
-t_lex_node					*lexer_find_node(t_lexer_ir *ir, char *key);
+void						lexer_ir_dump(t_lexer_ir *ir);
+t_lexer_ir					*lexer_ir_destroy(t_lexer_ir *ir);
+
+t_lex_node					*lexer_ir_find_node(t_lexer_ir *ir, char *key);
 
 #endif

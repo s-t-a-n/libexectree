@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:57 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:42:19 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:38:36 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static uint8_t	attempt_stitch(t_lexer_ir *ir, t_lex_token *token)
 {
 	t_lex_node *node;
 
-	node = lexer_find_node(ir, (char *)token->sig);
+	node = lexer_ir_find_node(ir, (char *)token->sig);
 	if (node)
 	{
 		token->type = NONTERMINAL;
@@ -32,7 +32,7 @@ static uint8_t	attempt_stitch(t_lexer_ir *ir, t_lex_token *token)
 		return (1);
 }
 
-uint8_t			lexer_post_process(t_lexer_ir *ir)
+uint8_t			lexgen_post_process(t_lexer_ir *ir)
 {
 	uint8_t	errors;
 	t_list	*lst;

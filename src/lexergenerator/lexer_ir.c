@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:44 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 22:40:17 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/19 23:46:09 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,22 @@ static uint8_t	parse_line(t_lexer_ir *ir, char *line)
 	if (line[0] == '<')
 	{
 		line++;
-		if (!(node = process_new_nonterminal(ir, &line)))
+		if (!(node = lexgen_process_new_nonterminal(ir, &line)))
 			return (1);
 	}
 #ifdef DEBUG
 	assert(node);
 #endif
-	return (process_definitions(ir, node, &line));
+	return (lexgen_process_definitions(ir, node, &line));
 }
 
-t_lexer_ir		*lexer_generator(const char *bnf_fpath)
+t_lexer_ir		*lexer_ir_generate(const char *bnf_fpath)
 {
 	int			fd;
 	t_lexer_ir	*ir;
 	char		*line;
 
-	if ((ir = lexer_generator_create()))
+	if ((ir = lexer_ir_create()))
 	{
 		if ((fd = open(bnf_fpath, O_RDONLY)) >= 0)
 		{
@@ -60,7 +60,7 @@ t_lexer_ir		*lexer_generator(const char *bnf_fpath)
 				{
 					free(line);
 					close(fd);
-					return (lexer_generator_destroy(ir));
+					return (lexer_ir_destroy(ir));
 				}
 				free(line);
 			}
@@ -68,9 +68,11 @@ t_lexer_ir		*lexer_generator(const char *bnf_fpath)
 			close(fd);
 		}
 		else
-			return (lexer_generator_destroy(ir));
-		if (lexer_post_process(ir) != 0)
-			return (lexer_generator_destroy(ir));
+		{
+			return (lexer_ir_destroy(ir));
+		}
+		if (lexgen_post_process(ir) != 0)
+			return (lexer_ir_destroy(ir));
 	}
 	return (ir);
 }
