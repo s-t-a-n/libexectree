@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/19 22:14:35 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/20 17:11:07 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ NAME			= libexectree.a
 # internal libraries ########################################################
 LOGGER			= logger.a
 LEXERGENERATOR	= lexergenerator.a
+LEXER			= lexer.a
 
 # directories ###############################################################
 SRC_D = src
@@ -54,6 +55,11 @@ LG_SRC =$(SRC_D)/lexergenerator/lexer_ir.c									\
 		$(SRC_D)/lexergenerator/post_processing.c							\
 
 LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+
+### lexer source files
+LEX_SRC =$(SRC_D)/lexer/									\
+
+LEX_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 # dependencies ##############################################################
 LIBGNL=lib/libgnl/libgnl.a
@@ -148,7 +154,7 @@ submodule:
 	@git submodule update --init --remote --recursive
 
 $(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)			\
-		$(LEXERGENERATOR) $(OBJ_D) $(OBJ)
+		$(LEXERGENERATOR) $(LEXER) $(OBJ_D) $(OBJ)
 	@$(ECHO) "Linking $(NAME)..."
 	@$(LD) $(LD_FLAGS) $(NAME) $(OBJ) 2>$(CC_LOG)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
@@ -173,10 +179,20 @@ $(LEXERGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
+$(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
+		$(OBJ_D) $(LG_OBJ)
+	@$(ECHO) "Linking $(LEXER)..."
+	@$(LD) $(LD_FLAGS) $(LEXER) $(LG_OBJ) 2>$(CC_LOG)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
 $(OBJ_D):
 	@mkdir -p $(OBJ_D)
-	@mkdir -p $(OBJ_D)/lexergenerator
 	@mkdir -p $(OBJ_D)/logger
+	@mkdir -p $(OBJ_D)/lexergenerator
+	@mkdir -p $(OBJ_D)/lexer
 
 $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
@@ -205,6 +221,15 @@ $(LG_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
+$(LEX_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
+	@$(ECHO) "Compiling $<..."
+	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
+		|| touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
 $(LIBGNL):
 	@make -C $(LIB_D)/libgnl
 
@@ -216,9 +241,8 @@ $(LIBVECTOR):
 
 clean:
 	@$(RM) $(OBJ)
-	@$(RM) -r $(NAME).dSYM
+	@$(RM) -r *.dSYM
 	@$(RM) *.testbin
-	@$(RM) -r *.testbin.dSYM
 	@$(RM) -r $(OBJ_D)
 	@make -C $(LIB_D)/libgnl clean || true
 	@make -C $(LIB_D)/libft clean || true
@@ -227,6 +251,7 @@ clean:
 fclean: clean
 	@$(RM) $(NAME)
 	@$(RM) $(LEXERGENERATOR)
+	@$(RM) $(LEXER)
 	@$(RM) $(LOGGER)
 	@make -C $(LIB_D)/libgnl fclean || true
 	@make -C $(LIB_D)/libft fclean || true
@@ -263,8 +288,8 @@ basics_test: $(NAME)
 		&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-lexer_ir_test: TEST='lexer_ir_t'
-lexer_ir_test: $(LEXERGENERATOR)
+lexer_generator_test: TEST='lexer_generator_t'
+lexer_generator_test: $(LEXERGENERATOR)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
 		tests/$(TEST).c $(LEXERGENERATOR) $(LOGGER) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
@@ -276,9 +301,24 @@ lexer_ir_test: $(LEXERGENERATOR)
 		&& $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
+lexer_test: TEST='lexer_t'
+lexer_test: $(LEXERGENERATOR) $(LEXER)
+	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
+	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
+		tests/$(TEST).c $(LEXERGENERATOR) $(LEXER) $(LOGGER) $(LIBGNL)		\
+		$(LIBFT) $(LIBVECTOR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(ECHO) "Running $(TEST)...\n"
+	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS)				\
+		&& $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
 tests: $(NAME)
 	@make ASAN=1 re
 	@make ASAN=1 basics_test
-	@make ASAN=1 lexer_ir_test
+	@make ASAN=1 lexer_generator_test
+	@make ASAN=1 lexer_test
 
 .PHONY = all clean fclean re
