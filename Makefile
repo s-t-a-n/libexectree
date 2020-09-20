@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/20 19:00:02 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/20 19:48:40 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,16 +26,7 @@ INC_D = inc
 LIB_D = lib
 
 # common source files ######################################################
-SRC =	$(SRC_D)/exectree_populate.c										\
-		$(SRC_D)/exectree_lifetime.c										\
-		$(SRC_D)/exectree_build.c											\
-		$(SRC_D)/exectree_execute.c											\
-		$(SRC_D)/node_lifetime.c											\
-		$(SRC_D)/tree_lifetime.c											\
-		$(SRC_D)/tree_populate.c											\
-		$(SRC_D)/branch_lifetime.c											\
-		$(SRC_D)/tokentable_lifetime.c										\
-		$(SRC_D)/tokentable_populate.c										\
+SRC =	$(SRC_D)/common/common.c											\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
@@ -202,6 +193,7 @@ $(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
 
 $(OBJ_D):
 	@mkdir -p $(OBJ_D)
+	@mkdir -p $(OBJ_D)/common
 	@mkdir -p $(OBJ_D)/logger
 	@mkdir -p $(OBJ_D)/lexergenerator
 	@mkdir -p $(OBJ_D)/lexer
@@ -261,10 +253,7 @@ clean:
 	@make -C $(LIB_D)/libvector clean || true
 
 fclean: clean
-	@$(RM) $(NAME)
-	@$(RM) $(LEXERGENERATOR)
-	@$(RM) $(LEXER)
-	@$(RM) $(LOGGER)
+	@$(RM) $(ALLDEPS) $(NAME)
 	@make -C $(LIB_D)/libgnl fclean || true
 	@make -C $(LIB_D)/libft fclean || true
 	@make -C $(LIB_D)/libvector fclean || true
