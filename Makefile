@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/20 18:39:27 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/20 19:00:02 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ OBJ_D = obj
 INC_D = inc
 LIB_D = lib
 
-# generic source files ######################################################
+# common source files ######################################################
 SRC =	$(SRC_D)/exectree_populate.c										\
 		$(SRC_D)/exectree_lifetime.c										\
 		$(SRC_D)/exectree_build.c											\

@@ -6,13 +6,12 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/20 17:03:10 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/20 18:32:04 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/09/20 19:02:12 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
-
 
 
 #endif
