@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/20 17:11:07 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/20 17:35:00 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,7 +59,7 @@ LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 ### lexer source files
 LEX_SRC =$(SRC_D)/lexer/									\
 
-LEX_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+LEX_OBJ :=	$(LEX_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 # dependencies ##############################################################
 LIBGNL=lib/libgnl/libgnl.a
