@@ -91,7 +91,7 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 	size_t				wordlen;
 
 	wordlen = 0;
-	while (*(*line + wordlen) && *(*line + wordlen) != ' ')
+	while (*(*line + wordlen) && (*(*line + wordlen) != ' ') && *(*line + wordlen) != '|')
 		wordlen++;
 	word = ft_strsub(*line, 0, wordlen);
 	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
