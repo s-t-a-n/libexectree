@@ -1,18 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer.h                                            :+:    :+:            */
+/*   lexer.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/20 17:03:10 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/20 18:32:04 by sverschu      ########   odam.nl         */
+/*   Created: 2020/09/20 18:31:36 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/09/20 18:31:47 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
-
-
-
-#endif
+#include "lexer.h"

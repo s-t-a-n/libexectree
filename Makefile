@@ -6,16 +6,18 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/20 17:35:00 by sverschu      ########   odam.nl          #
+#    Updated: 2020/09/20 18:39:27 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			= libexectree.a
 
 # internal libraries ########################################################
+COMMON          = common.a
 LOGGER			= logger.a
 LEXERGENERATOR	= lexergenerator.a
 LEXER			= lexer.a
+ALLDEPS         = $(COMMON) $(LOGGER) $(LEXERGENERATOR) $(LEXER)
 
 # directories ###############################################################
 SRC_D = src
@@ -45,19 +47,19 @@ LOG_OBJ :=	$(LOG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 ### lexer generator source files
 LG_SRC =$(SRC_D)/lexergenerator/lexer_ir.c									\
 		$(SRC_D)/lexergenerator/lexer_ir_lifetime.c							\
-		$(SRC_D)/lexergenerator/process_nonterminal.c						\
-		$(SRC_D)/lexergenerator/process_definitions.c						\
-		$(SRC_D)/lexergenerator/definition_lifetime.c						\
-		$(SRC_D)/lexergenerator/node_lifetime.c								\
-		$(SRC_D)/lexergenerator/token_lifetime.c							\
-		$(SRC_D)/lexergenerator/dump.c										\
-		$(SRC_D)/lexergenerator/search.c									\
-		$(SRC_D)/lexergenerator/post_processing.c							\
+		$(SRC_D)/lexergenerator/lg_process_nonterminal.c					\
+		$(SRC_D)/lexergenerator/lg_process_definitions.c					\
+		$(SRC_D)/lexergenerator/lg_definition_lifetime.c					\
+		$(SRC_D)/lexergenerator/lg_node_lifetime.c							\
+		$(SRC_D)/lexergenerator/lg_token_lifetime.c							\
+		$(SRC_D)/lexergenerator/lg_dump.c									\
+		$(SRC_D)/lexergenerator/lg_search.c									\
+		$(SRC_D)/lexergenerator/lg_post_processing.c						\
 
 LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### lexer source files
-LEX_SRC =$(SRC_D)/lexer/									\
+LEX_SRC =$(SRC_D)/lexer/lexer.c												\
 
 LEX_OBJ :=	$(LEX_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
@@ -89,10 +91,12 @@ CAT=cat
 # compiler and linker #######################################################
 CC = clang
 LD = ar
+LT = libtool
 
 # compile, linker and test flags ############################################
 CC_FLAGS =	-Wall -Wextra -Werror
-LD_FLAGS =  -rcs
+LD_FLAGS =	-rcs
+LT_FLAGS =	-static
 T_FLAGS = 	-lcriterion
 
 # debugging or optimilization flags #########################################
@@ -154,9 +158,17 @@ submodule:
 	@git submodule update --init --remote --recursive
 
 $(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)			\
-		$(LEXERGENERATOR) $(LEXER) $(OBJ_D) $(OBJ)
+		$(LEXERGENERATOR) $(LEXER) $(COMMON)
 	@$(ECHO) "Linking $(NAME)..."
-	@$(LD) $(LD_FLAGS) $(NAME) $(OBJ) 2>$(CC_LOG)
+	@$(LT) $(LT_FLAGS) -o $(NAME) $(ALLDEPS) 2>$(CC_LOG) || touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(COMMON): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LOGGER) $(OBJ_D) $(OBJ)
+	@$(ECHO) "Linking $(COMMON)..."
+	@$(LD) $(LD_FLAGS) $(COMMON) $(OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
@@ -164,7 +176,7 @@ $(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)			\
 
 $(LOGGER): $(GIT_MODULES) $(LIBFT) $(OBJ_D) $(LOG_OBJ)
 	@$(ECHO) "Linking $(LOGGER)..."
-	@$(LD) $(LD_FLAGS) $(LOGGER) $(LOG_OBJ) 2>$(CC_LOG)
+	@$(LD) $(LD_FLAGS) $(LOGGER) $(LOG_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
@@ -173,16 +185,16 @@ $(LOGGER): $(GIT_MODULES) $(LIBFT) $(OBJ_D) $(LOG_OBJ)
 $(LEXERGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
 		$(OBJ_D) $(LG_OBJ)
 	@$(ECHO) "Linking $(LEXERGENERATOR)..."
-	@$(LD) $(LD_FLAGS) $(LEXERGENERATOR) $(LG_OBJ) 2>$(CC_LOG)
+	@$(LD) $(LD_FLAGS) $(LEXERGENERATOR) $(LG_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 $(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
-		$(OBJ_D) $(LG_OBJ)
+		$(OBJ_D) $(LEX_OBJ)
 	@$(ECHO) "Linking $(LEXER)..."
-	@$(LD) $(LD_FLAGS) $(LEXER) $(LG_OBJ) 2>$(CC_LOG)
+	@$(LD) $(LD_FLAGS) $(LEXER) $(LEX_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
