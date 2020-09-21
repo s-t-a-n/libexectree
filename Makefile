@@ -26,7 +26,7 @@ INC_D = inc
 LIB_D = lib
 
 # common source files ######################################################
-SRC =	$(SRC_D)/common/common.c											\
+SRC =	$(SRC_D)/common/exectree_lifetime.c									\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
@@ -87,7 +87,7 @@ LT = libtool
 # compile, linker and test flags ############################################
 CC_FLAGS =	-Wall -Wextra -Werror
 LD_FLAGS =	-rcs
-LT_FLAGS =	--mode=link gcc -g -O
+LT_FLAGS =	--tag CXX --mode=link cc
 T_FLAGS = 	-lcriterion
 
 # debugging or optimilization flags #########################################
@@ -148,10 +148,18 @@ $(GIT_MODULES):
 submodule:
 	@git submodule update --init --remote --recursive
 
-$(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)			\
-		$(LEXERGENERATOR) $(LEXER) $(COMMON)
+# this is incredibly hacky, but there seems to be no other portable way to
+# combine static libs using standard makefiles...
+# https://stackoverflow.com/questions/24954747/how-to-use-libtool-to-create
+# -a-static-library-from-a-bunch-of-static-libraries
+$(NAME): $(LOGGER) $(LEXERGENERATOR) $(LEXER) $(COMMON)
 	@$(ECHO) "Linking $(NAME)..."
-	@$(LT) $(LT_FLAGS) -o $(NAME) $(ALLDEPS) 1>/dev/null 2>$(CC_LOG) || touch $(CC_ERROR)
+	@ar cru $@ 2>$(CC_LOG)|| touch $(CC_ERROR)
+	@mkdir -p artmp
+	@list='$^'; for p in $$list; do											\
+	    (cd artmp; ar x "../$$p"; ar q "../$@" *.o; rm *.o) 2>$(CC_LOG); done
+	@rm -rf artmp
+	@ranlib $@ 2> $(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
@@ -263,30 +271,17 @@ norm:
 
 re: fclean all
 
-basics_crit_test: TEST='basics_crit_t'
-basics_crit_test: $(NAME)
-	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
-	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
-		tests/$(TEST).c $(NAME)
-	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
-	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
-	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin		\
-		&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
-	@$(RM) -f $(CC_LOG) $(CC_ERROR)
-
 basics_test: TEST='basics_t'
 basics_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin	\
 		tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
-	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) && $(RM) -f $(TEST).testbin		\
-		&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/bash.bnf				\
+	&& $(RM) -f $(TEST).testbin	&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_generator_test: TEST='lexer_generator_t'
@@ -294,11 +289,11 @@ lexer_generator_test: $(LEXERGENERATOR)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
 		tests/$(TEST).c $(LEXERGENERATOR) $(LOGGER) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
-	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS)				\
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/bash.bnf				\
 		&& $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
@@ -308,8 +303,8 @@ lexer_test: $(LEXERGENERATOR) $(LEXER)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
 		tests/$(TEST).c $(LEXERGENERATOR) $(LEXER) $(LOGGER) $(LIBGNL)		\
 		$(LIBFT) $(LIBVECTOR)
-	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"	\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)	\
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
 	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS)				\
@@ -320,6 +315,6 @@ tests: $(NAME)
 	@make ASAN=1 re
 	@make ASAN=1 basics_test
 	@make ASAN=1 lexer_generator_test
-	@make ASAN=1 lexer_test
+	#@make ASAN=1 lexer_test
 
-.PHONY = all clean fclean re
+.PHONY = all clean fclean re tests
