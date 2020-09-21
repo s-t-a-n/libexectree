@@ -87,7 +87,7 @@ LT = libtool
 # compile, linker and test flags ############################################
 CC_FLAGS =	-Wall -Wextra -Werror
 LD_FLAGS =	-rcs
-LT_FLAGS =	-static
+LT_FLAGS =	--mode=link gcc -g -O
 T_FLAGS = 	-lcriterion
 
 # debugging or optimilization flags #########################################
@@ -151,7 +151,7 @@ submodule:
 $(NAME): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)			\
 		$(LEXERGENERATOR) $(LEXER) $(COMMON)
 	@$(ECHO) "Linking $(NAME)..."
-	@$(LT) $(LT_FLAGS) -o $(NAME) $(ALLDEPS) 2>$(CC_LOG) || touch $(CC_ERROR)
+	@$(LT) $(LT_FLAGS) -o $(NAME) $(ALLDEPS) 1>/dev/null 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
