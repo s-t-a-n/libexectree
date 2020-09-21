@@ -12,3 +12,22 @@
 
 #include "lexer.h"
 
+void		*exectree_single_parse(void *_exectree, const char *str)
+{
+	t_exectree	*exectree;
+
+	exectree = (t_exectree *) _exectree;
+
+	return (NULL); // STUB
+	(void)str;
+}
+
+void		*exectree_multi_parse(void *_exectree, const char *str)
+{
+	t_exectree	*exectree;
+
+	exectree = (t_exectree *) _exectree;
+
+	return (NULL); // STUB
+	(void)str;
+}

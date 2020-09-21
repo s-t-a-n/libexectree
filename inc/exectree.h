@@ -16,6 +16,9 @@
 void	*exectree_create(const char *bnf_fpath);
 void	*exectree_destroy(void *tree);
 
+void	*exectree_single_parse(void *_exectree, const char *str);
+void	*exectree_multi_parse(void *_exectree, const char *str); // feed NULL, then lines, then NULL again
 
+void	*exectree_execute(void *tree);
 
 #endif

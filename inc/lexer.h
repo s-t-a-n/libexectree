@@ -13,5 +13,7 @@
 #ifndef LEXER_H
 # define LEXER_H
 
+#include "exectree_internal.h"
+
 
 #endif

@@ -23,6 +23,7 @@
 
 # include "vector.h"
 # include "exectree.h"
+# include "lexer_ir.h"
 
 typedef struct	s_exectree
 {
