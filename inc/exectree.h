@@ -13,8 +13,9 @@
 #ifndef EXECTREE_H
 # define EXECTREE_H
 
-# ifdef DEBUG
-#  include <stdio.h>
-# endif
+void	*exectree_create(const char *bnf_fpath);
+void	*exectree_destroy(void *tree);
+
+
 
 #endif

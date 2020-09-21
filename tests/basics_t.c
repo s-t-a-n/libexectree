@@ -15,10 +15,15 @@
 
 #include "exectree.h"
 
-int				main(void)
+int				main(int argc, char **argv)
 {
-	void *tree = exectree_create();
-	assert(tree);
-	assert(exectree_destroy(tree) == NULL);
-	return (0);
+	if (argc == 2)
+	{
+		void *tree = exectree_create(argv[1]);
+		assert(tree);
+		assert(exectree_destroy(tree) == NULL);
+		return (0);
+	}
+	else
+		return (1);
 }

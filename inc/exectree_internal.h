@@ -13,11 +13,20 @@
 #ifndef EXECTREE_INTERNAL_H
 # define EXECTREE_INTERNAL_H
 
+# ifdef DEBUG
+#  include <stdio.h>
+# endif
+
 # include <stdlib.h>
 
 # include "libft.h"
 
 # include "vector.h"
 # include "exectree.h"
+
+typedef struct	s_exectree
+{
+	t_lexer_ir	*lex_ir;
+}				t_exectree;
 
 #endif
