@@ -133,9 +133,10 @@ uint8_t					lexgen_process_definitions(t_lexer_ir *ir,
 					errors += process_literal(def, line);
 				else if (**line == '<')
 					errors += process_nonterminal(node, def, ir, line);
-				else if (ft_isalnum(**line))
+				else if (ft_isalnum(**line) || **line == '_')
 					errors += process_word(def, line);
-				*line = ft_strscan(*line);
+				if (*line == (*line = ft_strscan(*line)))
+					(*line)++;
 			}
 			if (!vector(&node->definitions, V_PUSHBACK, 0, def))
 				lexgen_definition_destroy(def);
