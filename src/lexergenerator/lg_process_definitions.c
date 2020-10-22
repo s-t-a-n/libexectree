@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:11:03 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 23:53:07 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/22 20:36:37 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,8 +135,7 @@ uint8_t					lexgen_process_definitions(t_lexer_ir *ir,
 					errors += process_nonterminal(node, def, ir, line);
 				else if (ft_isalnum(**line) || **line == '_')
 					errors += process_word(def, line);
-				if (*line == (*line = ft_strscan(*line)))
-					(*line)++;
+				*line = ft_strscan(*line);
 			}
 			if (!vector(&node->definitions, V_PUSHBACK, 0, def))
 				lexgen_definition_destroy(def);
