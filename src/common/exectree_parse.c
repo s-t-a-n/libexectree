@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer.h                                            :+:    :+:            */
+/*   exectree_parse.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/09/20 17:03:10 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/22 22:40:01 by sverschu      ########   odam.nl         */
+/*   Created: 2020/10/22 21:50:42 by sverschu      #+#    #+#                 */
+/*   Updated: 2020/10/22 22:35:23 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LEXER_H
-# define LEXER_H
-
 #include "exectree_internal.h"
 
-t_node *lex_lexer(t_lexer_ir *ir, const char *str);
+void	*exectree_parse(void *_tree, const char *str)
+{
+	t_exectree *tree;
 
-#endif
+	tree = (t_exectree *)_tree;
+
+	// call lexer
+	(void)str; // STUB
+	// call parser
+	return (tree);
+}
