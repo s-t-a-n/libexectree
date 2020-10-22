@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/10/22 20:34:54 by sverschu      ########   odam.nl          #
+#    Updated: 2020/10/22 21:53:45 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ LIB_D = lib
 
 # common source files ######################################################
 SRC =	$(SRC_D)/common/exectree_lifetime.c									\
+		$(SRC_D)/common/exectree_parse.c									\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
@@ -184,7 +185,8 @@ $(LOGGER): $(GIT_MODULES) $(LIBFT) $(OBJ_D) $(LOG_OBJ)
 $(LEXERGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
 		$(OBJ_D) $(LG_OBJ)
 	@$(ECHO) "Linking $(LEXERGENERATOR)..."
-	@$(LD) $(LD_FLAGS) $(LEXERGENERATOR) $(LG_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
+	@$(LD) $(LD_FLAGS) $(LEXERGENERATOR) $(LG_OBJ) 2>$(CC_LOG)				\
+	|| touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
@@ -280,8 +282,7 @@ basics_test: $(NAME)
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/bash.bnf				\
-	&& $(RM) -f $(TEST).testbin	&& $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/simple_prompt.bnf
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_generator_test: TEST='lexer_generator_t'
@@ -293,8 +294,7 @@ lexer_generator_test: $(LEXERGENERATOR)
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/bash.bnf				\
-		&& $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/simple_prompt.bnf
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_test: TEST='lexer_t'
@@ -307,8 +307,7 @@ lexer_test: $(LEXERGENERATOR) $(LEXER)
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin examples/bash.bnf $(CRIT_FLAGS)				\
-		&& $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
+	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf $(CRIT_FLAGS)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 tests:
