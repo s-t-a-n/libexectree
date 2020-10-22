@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/09/20 19:48:40 by sverschu      ########   odam.nl          #
+#    Updated: 2020/10/22 20:34:54 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -311,10 +311,10 @@ lexer_test: $(LEXERGENERATOR) $(LEXER)
 		&& $(RM) -f $(TEST).testbin && $(RM) -rf $(TEST).dSYM 2>$(CC_LOG)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-tests: $(NAME)
+tests:
 	@make ASAN=1 re
 	@make ASAN=1 basics_test
 	@make ASAN=1 lexer_generator_test
 	#@make ASAN=1 lexer_test
 
-.PHONY = all clean fclean re tests
+.PHONY: all clean fclean re tests
