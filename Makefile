@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/10/22 21:53:45 by sverschu      ########   odam.nl          #
+#    Updated: 2020/10/23 17:54:14 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -301,43 +301,42 @@ basics_test: TEST='basics_t'
 basics_test: $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin	\
-		tests/$(TEST).c $(NAME) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
+		tests/$(TEST).c $(NAME) $(ALLDEPS) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/simple_prompt.bnf "echo a ; echo b"
+	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf "$(CMD)"
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_generator_test: TEST='lexer_generator_t'
 lexer_generator_test: $(LEXERGENERATOR)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
-		tests/$(TEST).c $(LEXERGENERATOR) $(LOGGER) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
+		tests/$(TEST).c $(ALLDEPS) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/simple_prompt.bnf
+	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_test: TEST='lexer_t'
 lexer_test: $(LEXERGENERATOR) $(LEXER)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
-		tests/$(TEST).c $(LEXERGENERATOR) $(LEXER) $(LOGGER) $(LIBGNL)		\
-		$(LIBFT) $(LIBVECTOR)
+		tests/$(TEST).c $(ALLDEPS) $(LOGGER) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf $(CRIT_FLAGS)
+	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf "$(CMD)"
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 tests:
 	@make ASAN=1 re
 	@make ASAN=1 basics_test
 	@make ASAN=1 lexer_generator_test
-	#@make ASAN=1 lexer_test
+	@make ASAN=1 lexer_test
 
 .PHONY: all clean fclean re tests
