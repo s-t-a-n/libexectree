@@ -282,7 +282,7 @@ basics_test: $(NAME)
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/simple_prompt.bnf
+	@$(DBG) ./$(TEST).testbin $(CRIT_FLAGS) examples/simple_prompt.bnf "echo a ; echo b"
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_generator_test: TEST='lexer_generator_t'

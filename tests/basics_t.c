@@ -17,10 +17,11 @@
 
 int				main(int argc, char **argv)
 {
-	if (argc == 2)
+	if (argc == 3)
 	{
 		void *tree = exectree_create(argv[1]);
 		assert(tree);
+		assert(exectree_parse(tree, argv[2]));
 		assert(exectree_destroy(tree) == NULL);
 		return (0);
 	}
