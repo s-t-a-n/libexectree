@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/10/23 17:54:14 by sverschu      ########   odam.nl          #
+#    Updated: 2020/10/23 19:24:25 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -161,7 +161,6 @@ submodule:
 # -a-static-library-from-a-bunch-of-static-libraries
 $(NAME): $(LOGGER) $(COMMON) $(NODE) $(LEXERGENERATOR) $(LEXER)
 	@$(ECHO) "Linking $(NAME)..."
-	@ar cru $@ 2>$(CC_LOG)|| touch $(CC_ERROR)
 	@mkdir -p artmp
 	@list='$^'; for p in $$list; do											\
 	    (cd artmp; ar x "../$$p"; ar q "../$@" *.o; rm *.o) 2>$(CC_LOG); done
