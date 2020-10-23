@@ -10,4 +10,7 @@ typedef struct	s_node
 	void		*children;
 }				t_node;
 
+t_node			*node_create();
+t_node			*node_destroy(t_node *node);
+
 #endif

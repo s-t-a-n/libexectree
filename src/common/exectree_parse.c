@@ -6,10 +6,13 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/22 21:50:42 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/22 22:35:23 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/23 19:14:59 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
+
+#include "lexer.h"
 #include "exectree_internal.h"
 
 void	*exectree_parse(void *_tree, const char *str)
@@ -19,6 +22,8 @@ void	*exectree_parse(void *_tree, const char *str)
 	tree = (t_exectree *)_tree;
 
 	// call lexer -> build concrete syntax tree
+	tree->lex_tree = lexer(tree, str);
+
 	// call parser -> build abstract syntax tree out of string and concrete syntax tree
 	return (tree);
 	(void)str; // STUB

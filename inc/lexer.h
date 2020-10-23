@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/20 17:03:10 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/22 22:40:01 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/23 18:00:17 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 #include "exectree_internal.h"
 
-t_node *lex_lexer(t_lexer_ir *ir, const char *str);
+t_node *lexer(t_exectree *tree, const char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/08/28 19:38:12 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/22 22:39:36 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/23 19:13:23 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,9 @@
 #  include <stdio.h>
 # endif
 
-# include <stdlib.h>
-
-# include "libft.h"
-
-# include "vector.h"
 # include "exectree.h"
 # include "lexer_ir.h"
 # include "node.h"
-# include "lexer.h"
 
 typedef struct	s_exectree
 {
