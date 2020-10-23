@@ -14,10 +14,11 @@ NAME			= libexectree.a
 
 # internal libraries ########################################################
 COMMON          = common.a
+NODE			= node.a
 LOGGER			= logger.a
 LEXERGENERATOR	= lexergenerator.a
 LEXER			= lexer.a
-ALLDEPS         = $(COMMON) $(LOGGER) $(LEXERGENERATOR) $(LEXER)
+ALLDEPS         = $(COMMON) $(NODE) $(LOGGER) $(LEXERGENERATOR) $(LEXER)
 
 # directories ###############################################################
 SRC_D = src
@@ -25,11 +26,16 @@ OBJ_D = obj
 INC_D = inc
 LIB_D = lib
 
-# common source files ######################################################
+# common source files #######################################################
 SRC =	$(SRC_D)/common/exectree_lifetime.c									\
 		$(SRC_D)/common/exectree_parse.c									\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+
+# node source files #########################################################
+NODE_SRC =	$(SRC_D)/node/node_lifetime.c									\
+
+NODE_OBJ :=	$(NODE_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### logger source files
 LOG_SRC=$(SRC_D)/logger/logger.c											\
@@ -153,7 +159,7 @@ submodule:
 # combine static libs using standard makefiles...
 # https://stackoverflow.com/questions/24954747/how-to-use-libtool-to-create
 # -a-static-library-from-a-bunch-of-static-libraries
-$(NAME): $(LOGGER) $(LEXERGENERATOR) $(LEXER) $(COMMON)
+$(NAME): $(LOGGER) $(COMMON) $(NODE) $(LEXERGENERATOR) $(LEXER)
 	@$(ECHO) "Linking $(NAME)..."
 	@ar cru $@ 2>$(CC_LOG)|| touch $(CC_ERROR)
 	@mkdir -p artmp
@@ -169,6 +175,14 @@ $(NAME): $(LOGGER) $(LEXERGENERATOR) $(LEXER) $(COMMON)
 $(COMMON): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LOGGER) $(OBJ_D) $(OBJ)
 	@$(ECHO) "Linking $(COMMON)..."
 	@$(LD) $(LD_FLAGS) $(COMMON) $(OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(NODE): $(GIT_MODULES) $(LIBFT) $(LOGGER) $(OBJ_D) $(NODE_OBJ)
+	@$(ECHO) "Linking $(NODE)..."
+	@$(LD) $(LD_FLAGS) $(NODE) $(NODE_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
@@ -204,11 +218,21 @@ $(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
 $(OBJ_D):
 	@mkdir -p $(OBJ_D)
 	@mkdir -p $(OBJ_D)/common
+	@mkdir -p $(OBJ_D)/node
 	@mkdir -p $(OBJ_D)/logger
 	@mkdir -p $(OBJ_D)/lexergenerator
 	@mkdir -p $(OBJ_D)/lexer
 
 $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
+	@$(ECHO) "Compiling $<..."
+	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
+		|| touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(NODE_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
 	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
 		|| touch $(CC_ERROR)
