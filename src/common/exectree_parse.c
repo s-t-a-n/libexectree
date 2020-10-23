@@ -18,8 +18,8 @@ void	*exectree_parse(void *_tree, const char *str)
 
 	tree = (t_exectree *)_tree;
 
-	// call lexer
-	(void)str; // STUB
-	// call parser
+	// call lexer -> build concrete syntax tree
+	// call parser -> build abstract syntax tree out of string and concrete syntax tree
 	return (tree);
+	(void)str; // STUB
 }

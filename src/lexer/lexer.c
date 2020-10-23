@@ -12,3 +12,9 @@
 
 #include "lexer.h"
 
+t_node *lex_lexer(t_lexer_ir *ir, const char *str)
+{
+	(void)ir; //STUB
+	(void)str; //STUB
+	return(NULL); //STUB
+}
