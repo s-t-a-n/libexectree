@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/22 21:50:42 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/23 19:14:59 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/24 16:40:55 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	*exectree_parse(void *_tree, const char *str)
 	tree = (t_exectree *)_tree;
 
 	// call lexer -> build concrete syntax tree
-	tree->lex_tree = lexer(tree, str);
+	tree->lex_tree = lexer(tree->lex_ir, str);
 
 	// call parser -> build abstract syntax tree out of string and concrete syntax tree
 	return (tree);
