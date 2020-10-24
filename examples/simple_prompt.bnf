@@ -64,12 +64,45 @@
           | 8
           | 9
 
+<symbol> ::= '!'
+           | '@'
+           | '#'
+           | '$'
+           | '%'
+           | '^'
+           | '&'
+           | '*'
+           | '('
+           | ')'
+           | '-'
+           | '_'
+           | '+'
+           | '='
+           | '{'
+           | '}'
+           | '['
+           | ']'
+           | ':'
+           | ';'
+           | '"'
+           | '<'
+           | '>'
+           | ','
+           | '.'
+           | '/'
+           | '?'
+# character \ and ' are missing
+# how to differentiate between command chain '&&' and literal '&' ?
+
 <number> ::= <digit>
            | <number> <digit>
 
 <word> ::= <letter>
          | <word> <letter>
          | <word> '_'
+
+<string> ::= '"' <word_list> '"'
+           | '"' <string> <word_list>'"'
 
 <word_list> ::=  <word>
               |  <word_list> <word>
@@ -113,3 +146,7 @@
 
 <command> ::=  <command_element>
             |  <command> <command_element>
+
+<command_chain> ::= <command> ';'
+                  | <command> '|'
+				  | <command_chain> <command>

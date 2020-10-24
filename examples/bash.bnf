@@ -1,5 +1,6 @@
 # source: http://stackoverflow.com/a/15599860/500942
 # style adapted for easier parsing
+# right most derived grammar
 <letter> ::= a
            |b
            |c
@@ -181,11 +182,11 @@
 <compound_list> ::=  <list>
                   |  <newline_list> <list1>
 
-<list0> ::=   <list1> '\n' <newline_list>
+<list0> ::=  <list1> '\n' <newline_list>
           |  <list1> '&' <newline_list>
           |  <list1> ';' <newline_list>
 
-<list1> ::=   <list1> '&&' <newline_list> <list1>
+<list1> ::=  <list1> '&&' <newline_list> <list1>
           |  <list1> '||' <newline_list> <list1>
           |  <list1> '&' <newline_list> <list1>
           |  <list1> ';' <newline_list> <list1>
@@ -195,8 +196,7 @@
 <list_terminator> ::= '\n'
                     |  ';'
 
-<newline_list> ::=
-                 |  <newline_list> '\n'
+<newline_list> ::= <newline_list> '\n'
 
 <simple_list> ::=  <simple_list1>
                 |  <simple_list1> '&'
