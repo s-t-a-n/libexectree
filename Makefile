@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/10/25 20:29:20 by sverschu      ########   odam.nl          #
+#    Updated: 2020/10/25 22:48:32 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ TREE			= node.a
 LOGGER			= logger.a
 LEXERGENERATOR	= lexergenerator.a
 LEXER			= lexer.a
-ALLDEPS         = $(COMMON) $(TREE) $(LOGGER) $(LEXERGENERATOR) $(LEXER)
+PARSER			= parser.a
+ALLDEPS         = $(COMMON) $(TREE) $(LOGGER) $(LEXERGENERATOR) $(LEXER) $(PARSER)
 
 # directories ###############################################################
 SRC_D = src
@@ -34,32 +35,38 @@ OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 # tree source files #########################################################
 TREE_SRC =	$(SRC_D)/tree/node_lifetime.c									\
+			$(SRC_D)/tree/tree_lifetime.c									\
 
 TREE_OBJ :=	$(TREE_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### logger source files
-LOG_SRC=$(SRC_D)/logger/logger.c											\
+LOG_SRC=	$(SRC_D)/logger/logger.c										\
 
 LOG_OBJ :=	$(LOG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### lexer generator source files
-LG_SRC =$(SRC_D)/lexergenerator/lexer_ir.c									\
-		$(SRC_D)/lexergenerator/lexer_ir_lifetime.c							\
-		$(SRC_D)/lexergenerator/lg_process_nonterminal.c					\
-		$(SRC_D)/lexergenerator/lg_process_definitions.c					\
-		$(SRC_D)/lexergenerator/lg_definition_lifetime.c					\
-		$(SRC_D)/lexergenerator/lg_node_lifetime.c							\
-		$(SRC_D)/lexergenerator/lg_token_lifetime.c							\
-		$(SRC_D)/lexergenerator/lg_dump.c									\
-		$(SRC_D)/lexergenerator/lg_search.c									\
-		$(SRC_D)/lexergenerator/lg_post_processing.c						\
+LG_SRC =	$(SRC_D)/lexergenerator/lexer_ir.c								\
+			$(SRC_D)/lexergenerator/lexer_ir_lifetime.c						\
+			$(SRC_D)/lexergenerator/lg_process_nonterminal.c				\
+			$(SRC_D)/lexergenerator/lg_process_definitions.c				\
+			$(SRC_D)/lexergenerator/lg_definition_lifetime.c				\
+			$(SRC_D)/lexergenerator/lg_node_lifetime.c						\
+			$(SRC_D)/lexergenerator/lg_token_lifetime.c						\
+			$(SRC_D)/lexergenerator/lg_dump.c								\
+			$(SRC_D)/lexergenerator/lg_search.c								\
+			$(SRC_D)/lexergenerator/lg_post_processing.c					\
 
 LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### lexer source files
-LEX_SRC =$(SRC_D)/lexer/lexer.c												\
+LEX_SRC =	$(SRC_D)/lexer/lexer.c											\
 
 LEX_OBJ :=	$(LEX_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+
+### parser source files
+PARSE_SRC =		$(SRC_D)/parser/parser.c									\
+
+PARSE_OBJ :=	$(PARSE_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 # dependencies ##############################################################
 LIBGNL=lib/libgnl/libgnl.a
@@ -159,7 +166,7 @@ submodule:
 # combine static libs using standard makefiles...
 # https://stackoverflow.com/questions/24954747/how-to-use-libtool-to-create
 # -a-static-library-from-a-bunch-of-static-libraries
-$(NAME): $(LOGGER) $(COMMON) $(TREE) $(LEXERGENERATOR) $(LEXER)
+$(NAME): $(ALLDEPS)
 	@$(ECHO) "Linking $(NAME)..."
 	@mkdir -p artmp
 	@list='$^'; for p in $$list; do											\
@@ -214,6 +221,15 @@ $(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
+$(PARSER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
+		$(OBJ_D) $(PARSE_OBJ)
+	@$(ECHO) "Linking $(PARSER)..."
+	@$(LD) $(LD_FLAGS) $(PARSER) $(PARSE_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
 $(OBJ_D):
 	@mkdir -p $(OBJ_D)
 	@mkdir -p $(OBJ_D)/common
@@ -221,6 +237,7 @@ $(OBJ_D):
 	@mkdir -p $(OBJ_D)/logger
 	@mkdir -p $(OBJ_D)/lexergenerator
 	@mkdir -p $(OBJ_D)/lexer
+	@mkdir -p $(OBJ_D)/parser
 
 $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
@@ -259,6 +276,15 @@ $(LG_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 $(LEX_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
+	@$(ECHO) "Compiling $<..."
+	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
+		|| touch $(CC_ERROR)
+	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
+	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
+	@$(RM) -f $(CC_LOG) $(CC_ERROR)
+
+$(PARSE_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
 	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
 		|| touch $(CC_ERROR)
