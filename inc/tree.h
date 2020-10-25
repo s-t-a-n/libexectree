@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/25 20:31:26 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/25 20:31:36 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/25 21:01:56 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,8 @@ typedef struct	s_node
 
 t_node			*node_create();
 t_node			*node_destroy(t_node *node);
+
+t_node			*tree_create();
+t_node			*tree_destroy(t_node *root);
 
 #endif

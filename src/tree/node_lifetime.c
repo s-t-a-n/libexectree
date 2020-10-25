@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/23 16:38:46 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/23 16:49:38 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/25 20:31:02 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "libft.h"
 #include "vector.h"
-#include "node.h"
+#include "tree.h"
 
 #define VEC_DEF_SIZE	12
 

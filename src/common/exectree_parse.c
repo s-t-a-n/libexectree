@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/22 21:50:42 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/24 16:40:55 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/25 21:44:21 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "lexer.h"
 #include "exectree_internal.h"
 
-void	*exectree_parse(void *_tree, const char *str)
+void	*exectree_parse(void *_tree, char *str)
 {
 	t_exectree *tree;
 
