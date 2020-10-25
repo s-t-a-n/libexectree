@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:10:48 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/09/19 23:30:04 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/25 20:11:13 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ t_lexer_ir		*lexer_ir_create(void)
 
 t_lexer_ir		*lexer_ir_destroy(t_lexer_ir *ir)
 {
+	unsigned int i;
+
 	if (ir)
 	{
 		while (*(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL) > 0)
@@ -41,6 +43,9 @@ t_lexer_ir		*lexer_ir_destroy(t_lexer_ir *ir)
 			lexgen_node_destroy(vector(&ir->nodes, V_PEEKBACK, 0, NULL));
 			vector(&ir->nodes, V_POPBACK, 0, NULL);
 		}
+		i = 0;
+		while (i < JTAB_SIZE)
+			lst_destroy(&ir->jtable[i++], false);
 		vector(&ir->nodes, V_DESTROY, false, NULL);
 	}
 	free(ir);

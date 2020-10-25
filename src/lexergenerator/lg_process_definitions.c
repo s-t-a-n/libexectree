@@ -6,7 +6,7 @@
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/19 22:11:03 by sverschu      #+#    #+#                 */
-/*   Updated: 2020/10/22 20:36:37 by sverschu      ########   odam.nl         */
+/*   Updated: 2020/10/25 20:15:20 by sverschu      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,21 @@ static uint8_t			process_word(t_lex_definition *def, char **line)
 	return (1);
 }
 
+static void				*add_to_jtable(	t_lexer_ir *ir,
+										t_lex_node *node,
+										char *line)
+{
+	int					c;
+
+	if (*line == '\'')
+		c = *(line + 1);
+	else if (ft_isalnum(*line) || *line == '_')
+		c = *line;
+	else
+		return (NULL);
+	return (lst_addback(&ir->jtable[c], node));
+}
+
 uint8_t					lexgen_process_definitions(t_lexer_ir *ir,
 											t_lex_node *node,
 											char **line)
@@ -129,6 +144,7 @@ uint8_t					lexgen_process_definitions(t_lexer_ir *ir,
 			*line = ft_strscan(*line);
 			while (**line)
 			{
+				add_to_jtable(ir, node, *line);
 				if (**line == '\'')
 					errors += process_literal(def, line);
 				else if (**line == '<')

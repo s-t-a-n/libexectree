@@ -2,7 +2,9 @@
 #ifndef LEXER_IR_H
 # define LEXER_IR_H
 
-#include "libft.h"
+# include "libft.h"
+
+# define JTAB_SIZE	127
 
 /*
 ** To protect sanity:
@@ -41,10 +43,14 @@ typedef struct				s_lex_node
 	void					*definitions;
 }							t_lex_node;
 
+/*
+** jtable contains nodes where first letter of terminal matches as index
+*/
 typedef struct				s_lexer_ir
 {
 	void					*nodes;
 	t_list					*post;
+	t_list					*jtable[JTAB_SIZE];
 	unsigned int			size;
 }							t_lexer_ir;
 
