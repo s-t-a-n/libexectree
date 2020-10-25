@@ -112,6 +112,7 @@ tags
 
 obj
 .refresh
+artmp
 *.log
 *.testbin
 libexectree.a

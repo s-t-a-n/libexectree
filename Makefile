@@ -6,7 +6,7 @@
 #    By: sverschu <sverschu@student.codam.n>          +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/08/25 18:13:09 by sverschu      #+#    #+#                  #
-#    Updated: 2020/10/23 19:24:25 by sverschu      ########   odam.nl          #
+#    Updated: 2020/10/25 20:29:20 by sverschu      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ NAME			= libexectree.a
 
 # internal libraries ########################################################
 COMMON          = common.a
-NODE			= node.a
+TREE			= node.a
 LOGGER			= logger.a
 LEXERGENERATOR	= lexergenerator.a
 LEXER			= lexer.a
-ALLDEPS         = $(COMMON) $(NODE) $(LOGGER) $(LEXERGENERATOR) $(LEXER)
+ALLDEPS         = $(COMMON) $(TREE) $(LOGGER) $(LEXERGENERATOR) $(LEXER)
 
 # directories ###############################################################
 SRC_D = src
@@ -32,10 +32,10 @@ SRC =	$(SRC_D)/common/exectree_lifetime.c									\
 
 OBJ :=	$(SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
-# node source files #########################################################
-NODE_SRC =	$(SRC_D)/node/node_lifetime.c									\
+# tree source files #########################################################
+TREE_SRC =	$(SRC_D)/tree/node_lifetime.c									\
 
-NODE_OBJ :=	$(NODE_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+TREE_OBJ :=	$(TREE_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### logger source files
 LOG_SRC=$(SRC_D)/logger/logger.c											\
@@ -159,7 +159,7 @@ submodule:
 # combine static libs using standard makefiles...
 # https://stackoverflow.com/questions/24954747/how-to-use-libtool-to-create
 # -a-static-library-from-a-bunch-of-static-libraries
-$(NAME): $(LOGGER) $(COMMON) $(NODE) $(LEXERGENERATOR) $(LEXER)
+$(NAME): $(LOGGER) $(COMMON) $(TREE) $(LEXERGENERATOR) $(LEXER)
 	@$(ECHO) "Linking $(NAME)..."
 	@mkdir -p artmp
 	@list='$^'; for p in $$list; do											\
@@ -179,9 +179,9 @@ $(COMMON): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LOGGER) $(OBJ_D) $(OBJ)
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-$(NODE): $(GIT_MODULES) $(LIBFT) $(LOGGER) $(OBJ_D) $(NODE_OBJ)
-	@$(ECHO) "Linking $(NODE)..."
-	@$(LD) $(LD_FLAGS) $(NODE) $(NODE_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
+$(TREE): $(GIT_MODULES) $(LIBFT) $(LOGGER) $(OBJ_D) $(TREE_OBJ)
+	@$(ECHO) "Linking $(TREE)..."
+	@$(LD) $(LD_FLAGS) $(TREE) $(TREE_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
@@ -217,7 +217,7 @@ $(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
 $(OBJ_D):
 	@mkdir -p $(OBJ_D)
 	@mkdir -p $(OBJ_D)/common
-	@mkdir -p $(OBJ_D)/node
+	@mkdir -p $(OBJ_D)/tree
 	@mkdir -p $(OBJ_D)/logger
 	@mkdir -p $(OBJ_D)/lexergenerator
 	@mkdir -p $(OBJ_D)/lexer
@@ -231,7 +231,7 @@ $(OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-$(NODE_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
+$(TREE_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
 	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
 		|| touch $(CC_ERROR)
@@ -280,6 +280,7 @@ clean:
 	@$(RM) $(OBJ)
 	@$(RM) -r *.dSYM
 	@$(RM) *.testbin
+	@$(RM) -r artmp
 	@$(RM) -r $(OBJ_D)
 	@make -C $(LIB_D)/libgnl clean || true
 	@make -C $(LIB_D)/libft clean || true
