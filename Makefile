@@ -332,7 +332,7 @@ basics_test: $(NAME)
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf "$(CMD)"
+	@$(DBG) ./$(TEST).testbin examples/bash.bnf "$(CMD)"
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_generator_test: TEST='lexer_generator_t'
@@ -344,7 +344,7 @@ lexer_generator_test: $(GRAMMARGENERATOR)
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf
+	@$(DBG) ./$(TEST).testbin examples/bash.bnf
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_test: TEST='lexer_t'
@@ -356,13 +356,13 @@ lexer_test: $(GRAMMARGENERATOR) $(LEXER)
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(ECHO) "Running $(TEST)...\n"
-	@$(DBG) ./$(TEST).testbin examples/simple_prompt.bnf "$(CMD)"
+	@$(DBG) ./$(TEST).testbin examples/bash.bnf "$(CMD)"
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 tests:
-	@make ASAN=1 re
-	@make ASAN=1 basics_test
-	@make ASAN=1 lexer_generator_test
-	@make ASAN=1 lexer_test
+	@$(MAKE) ASAN=1 re
+	@$(MAKE) ASAN=1 basics_test
+	@$(MAKE) ASAN=1 lexer_generator_test
+	@$(MAKE) ASAN=1 lexer_test
 
 .PHONY: all clean fclean re tests
