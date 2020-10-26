@@ -31,7 +31,7 @@ t_gram_token	*gramgen_token_create(t_gram_definition_type type, void *sig)
 t_gram_token		*gramgen_token_destroy(t_gram_token *token)
 {
 	if (token
-		&& (token->type == TERMINAL || token->type == UNKNOWN_NONTERMINAL))
+		&& (token->type == TERMINAL || token->type == UNBOUND_NONTERMINAL))
 	{
 		free(token->sig);
 	}

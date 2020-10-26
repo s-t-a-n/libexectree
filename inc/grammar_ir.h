@@ -18,8 +18,11 @@
 typedef enum				s_gram_definition_type
 {
 	NONTERMINAL,
-	UNKNOWN_NONTERMINAL,
-	TERMINAL
+	NONTERMINAL_MULT,
+	UNBOUND_NONTERMINAL,
+	UNBOUND_NONTERMINAL_MULT,
+	TERMINAL,
+	UNKNOWN
 }							t_gram_definition_type;
 
 /*
@@ -37,8 +40,15 @@ typedef struct				s_gram_definition
 	void					*tokens;
 }							t_gram_definition;
 
+typedef enum				s_gram_node_type
+{
+	PARSER_OBJECT,
+	LEXER_OBJECT
+}							t_gram_node_type;
+
 typedef struct				s_gram_node
 {
+	t_gram_node_type		type;
 	char					*nonterminal;
 	void					*definitions;
 }							t_gram_node;
@@ -55,10 +65,10 @@ typedef struct				s_grammar_ir
 }							t_grammar_ir;
 
 
-t_grammar_ir					*grammar_ir_generate(const char *bnf_fpath);
+t_grammar_ir				*grammar_ir_generate(const char *bnf_fpath);
 
 void						grammar_ir_dump(t_grammar_ir *ir);
-t_grammar_ir					*grammar_ir_destroy(t_grammar_ir *ir);
+t_grammar_ir				*grammar_ir_destroy(t_grammar_ir *ir);
 
 t_gram_node					*grammar_ir_find_node(t_grammar_ir *ir, char *key);
 

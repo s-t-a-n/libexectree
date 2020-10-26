@@ -14,7 +14,7 @@
 #include "vector.h"
 #include "grammargenerator.h"
 
-t_gram_node	*gramgen_node_create(char *nonterminal)
+t_gram_node	*gramgen_node_create(char *nonterminal, t_gram_node_type type)
 {
 	t_gram_node *node;
 
@@ -27,6 +27,7 @@ t_gram_node	*gramgen_node_create(char *nonterminal)
 			return (NULL);
 		}
 		node->nonterminal = nonterminal;
+		node->type = type;
 	}
 	return (node);
 }

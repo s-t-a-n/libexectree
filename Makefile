@@ -47,8 +47,11 @@ LOG_OBJ :=	$(LOG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 ### grammar generator source files
 GG_SRC =	$(SRC_D)/grammargenerator/grammar_ir.c							\
 			$(SRC_D)/grammargenerator/grammar_ir_lifetime.c					\
-			$(SRC_D)/grammargenerator/gg_process_nonterminal.c				\
+			$(SRC_D)/grammargenerator/gg_process_production.c				\
 			$(SRC_D)/grammargenerator/gg_process_definitions.c				\
+			$(SRC_D)/grammargenerator/gg_process_nonterminal.c				\
+			$(SRC_D)/grammargenerator/gg_process_word.c						\
+			$(SRC_D)/grammargenerator/gg_process_literal.c					\
 			$(SRC_D)/grammargenerator/gg_definition_lifetime.c				\
 			$(SRC_D)/grammargenerator/gg_node_lifetime.c					\
 			$(SRC_D)/grammargenerator/gg_token_lifetime.c					\

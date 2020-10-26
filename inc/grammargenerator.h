@@ -24,10 +24,20 @@
 
 t_grammar_ir		*grammar_ir_create(void);
 
-t_gram_node			*gramgen_process_new_nonterminal(t_grammar_ir *ir, char **line);
+t_gram_node			*gramgen_process_new_production(t_grammar_ir *ir, char **line);
 uint8_t				gramgen_process_definitions(t_grammar_ir *ir, t_gram_node *node, char **line);
+uint8_t				gg_process_word(t_gram_definition *def, char **line);
+uint8_t				gg_process_literal(t_gram_definition *def, char **line);
+uint8_t				gg_process_nonterminal(			t_gram_node *node,
+													t_gram_definition *def,
+													t_grammar_ir *ir,
+													char **line);
+uint8_t				gg_process_unbound_nonterminal(	t_gram_node *node,
+													t_gram_definition *def,
+													t_grammar_ir *ir,
+													char **line);
 
-t_gram_node			*gramgen_node_create(char *nonterminal);
+t_gram_node			*gramgen_node_create(char *nonterminal, t_gram_node_type type);
 t_gram_node			*gramgen_node_destroy(t_gram_node *node);
 
 t_gram_definition	*gramgen_definition_create(void);

@@ -30,12 +30,12 @@ static uint8_t	parse_line(t_grammar_ir *ir, char *line)
 {
 	static t_gram_node *node;
 
-	if (!*line || *line == '#')
+	if (!*line || *line == '#' || !*ft_strscan(line) || *ft_strscan(line) == '#')
 		return (0);
 	if (line[0] == '<')
 	{
 		line++;
-		if (!(node = gramgen_process_new_nonterminal(ir, &line)))
+		if (!(node = gramgen_process_new_production(ir, &line)))
 			return (1);
 	}
 #ifdef DEBUG
