@@ -3,8 +3,9 @@
 
 # deviation from standard BNF:
 #	left side non-terminals in capitals mark lexer objects
-#	<*> marks expansion (mostly for strings)
 #	{} marks a terminal or non-terminal that may be repeated or omitted
+#	<key, key> or {key, key} signifies that multiple keys may be hit
+
 <LETTER> ::= a
            | b
            | c
@@ -110,7 +111,7 @@
          | <word> '_'
 		 | '\'' {WORD, NUMBER, SPACE, SYMBOL} '\''
 
-<STRING> ::= '"' <*> '"'
+<STRING> ::= '"' {WORD, NUMBER, SPACE, SYMBOL} '"'
 
 <assignment> ::= <word> '=' <word>
 
