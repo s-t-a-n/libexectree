@@ -11,13 +11,13 @@
 /* ************************************************************************** */
 
 #include "vector.h"
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
-t_lex_definition	*lexgen_definition_create(void)
+t_gram_definition	*gramgen_definition_create(void)
 {
-	t_lex_definition *def;
+	t_gram_definition *def;
 
-	def = malloc(sizeof(t_lex_definition));
+	def = malloc(sizeof(t_gram_definition));
 	if (def)
 	{
 		if (!vector(&def->tokens, V_CREATE, VEC_DEF_SIZE, NULL))
@@ -29,13 +29,13 @@ t_lex_definition	*lexgen_definition_create(void)
 	return (def);
 }
 
-t_lex_definition	*lexgen_definition_destroy(t_lex_definition *def)
+t_gram_definition	*gramgen_definition_destroy(t_gram_definition *def)
 {
 	if (def)
 	{
 		while (*(size_t *)vector(&def->tokens, V_SIZE, 0, NULL) > 0)
 		{
-			lexgen_token_destroy(vector(&def->tokens, V_PEEKBACK, 0, NULL));
+			gramgen_token_destroy(vector(&def->tokens, V_PEEKBACK, 0, NULL));
 			vector(&def->tokens, V_POPBACK, 0, NULL);
 		}
 		vector(&def->tokens, V_DESTROY, 0, NULL);

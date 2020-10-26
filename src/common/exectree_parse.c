@@ -22,7 +22,7 @@ void	*exectree_parse(void *_tree, char *str)
 	tree = (t_exectree *)_tree;
 
 	// call lexer -> build concrete syntax tree
-	tree->lex_tree = lexer(tree->lex_ir, str);
+	tree->lex_tree = lexer(tree->gram_ir, str);
 
 	// call parser -> build abstract syntax tree out of string and concrete syntax tree
 	return (tree);

@@ -10,22 +10,22 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME			= libexectree.a
+NAME				= libexectree.a
 
 # internal libraries ########################################################
-COMMON          = common.a
-TREE			= node.a
-LOGGER			= logger.a
-LEXERGENERATOR	= lexergenerator.a
-LEXER			= lexer.a
-PARSER			= parser.a
-ALLDEPS         = $(COMMON) $(TREE) $(LOGGER) $(LEXERGENERATOR) $(LEXER) $(PARSER)
+COMMON          	= common.a
+TREE				= node.a
+LOGGER				= logger.a
+GRAMMARGENERATOR	= lexergenerator.a
+LEXER				= lexer.a
+PARSER				= parser.a
+ALLDEPS         	= $(COMMON) $(TREE) $(LOGGER) $(GRAMMARGENERATOR) $(LEXER) $(PARSER)
 
 # directories ###############################################################
-SRC_D = src
-OBJ_D = obj
-INC_D = inc
-LIB_D = lib
+SRC_D 				= src
+OBJ_D 				= obj
+INC_D 				= inc
+LIB_D 				= lib
 
 # common source files #######################################################
 SRC =	$(SRC_D)/common/exectree_lifetime.c									\
@@ -44,19 +44,19 @@ LOG_SRC=	$(SRC_D)/logger/logger.c										\
 
 LOG_OBJ :=	$(LOG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
-### lexer generator source files
-LG_SRC =	$(SRC_D)/lexergenerator/lexer_ir.c								\
-			$(SRC_D)/lexergenerator/lexer_ir_lifetime.c						\
-			$(SRC_D)/lexergenerator/lg_process_nonterminal.c				\
-			$(SRC_D)/lexergenerator/lg_process_definitions.c				\
-			$(SRC_D)/lexergenerator/lg_definition_lifetime.c				\
-			$(SRC_D)/lexergenerator/lg_node_lifetime.c						\
-			$(SRC_D)/lexergenerator/lg_token_lifetime.c						\
-			$(SRC_D)/lexergenerator/lg_dump.c								\
-			$(SRC_D)/lexergenerator/lg_search.c								\
-			$(SRC_D)/lexergenerator/lg_post_processing.c					\
+### grammar generator source files
+GG_SRC =	$(SRC_D)/grammargenerator/grammar_ir.c							\
+			$(SRC_D)/grammargenerator/grammar_ir_lifetime.c					\
+			$(SRC_D)/grammargenerator/gg_process_nonterminal.c				\
+			$(SRC_D)/grammargenerator/gg_process_definitions.c				\
+			$(SRC_D)/grammargenerator/gg_definition_lifetime.c				\
+			$(SRC_D)/grammargenerator/gg_node_lifetime.c					\
+			$(SRC_D)/grammargenerator/gg_token_lifetime.c					\
+			$(SRC_D)/grammargenerator/gg_dump.c								\
+			$(SRC_D)/grammargenerator/gg_search.c							\
+			$(SRC_D)/grammargenerator/gg_post_processing.c					\
 
-LG_OBJ :=	$(LG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
+GG_OBJ :=	$(GG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
 ### lexer source files
 LEX_SRC =	$(SRC_D)/lexer/lexer.c											\
@@ -202,10 +202,10 @@ $(LOGGER): $(GIT_MODULES) $(LIBFT) $(OBJ_D) $(LOG_OBJ)
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-$(LEXERGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
-		$(OBJ_D) $(LG_OBJ)
-	@$(ECHO) "Linking $(LEXERGENERATOR)..."
-	@$(LD) $(LD_FLAGS) $(LEXERGENERATOR) $(LG_OBJ) 2>$(CC_LOG)				\
+$(GRAMMARGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
+		$(OBJ_D) $(GG_OBJ)
+	@$(ECHO) "Linking $(GRAMMARGENERATOR)..."
+	@$(LD) $(LD_FLAGS) $(GRAMMARGENERATOR) $(GG_OBJ) 2>$(CC_LOG)				\
 	|| touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
 	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
@@ -235,7 +235,7 @@ $(OBJ_D):
 	@mkdir -p $(OBJ_D)/common
 	@mkdir -p $(OBJ_D)/tree
 	@mkdir -p $(OBJ_D)/logger
-	@mkdir -p $(OBJ_D)/lexergenerator
+	@mkdir -p $(OBJ_D)/grammargenerator
 	@mkdir -p $(OBJ_D)/lexer
 	@mkdir -p $(OBJ_D)/parser
 
@@ -266,7 +266,7 @@ $(LOG_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-$(LG_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
+$(GG_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(ECHO) "Compiling $<..."
 	@$(CC) $(CC_FLAGS) -I$(INC_D) $(LIB_INC) -c $< -o $@ 2>$(CC_LOG)		\
 		|| touch $(CC_ERROR)
@@ -336,7 +336,7 @@ basics_test: $(NAME)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_generator_test: TEST='lexer_generator_t'
-lexer_generator_test: $(LEXERGENERATOR)
+lexer_generator_test: $(GRAMMARGENERATOR)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
 		tests/$(TEST).c $(ALLDEPS) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
@@ -348,7 +348,7 @@ lexer_generator_test: $(LEXERGENERATOR)
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 lexer_test: TEST='lexer_t'
-lexer_test: $(LEXERGENERATOR) $(LEXER)
+lexer_test: $(GRAMMARGENERATOR) $(LEXER)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
 		tests/$(TEST).c $(ALLDEPS) $(LOGGER) $(LIBGNL) $(LIBFT) $(LIBVECTOR)

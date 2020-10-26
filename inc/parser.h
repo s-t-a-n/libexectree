@@ -13,6 +13,6 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-t_node			*parser(t_lexer_ir *ir, char *str);
+t_node			*parser(t_exectree *e, char *str);
 
 #endif

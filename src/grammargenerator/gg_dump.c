@@ -17,31 +17,31 @@
 #include <stdio.h>
 
 #include "vector.h"
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
 /*
-void	lexgen_token_dump(t_lex_token *token)
+void	gramgen_token_dump(t_gram_token *token)
 {
 
 }
 
-void	lexgen_definition_dump(t_lex_definition *def)
+void	gramgen_definition_dump(t_gram_definition *def)
 {
 
 }
 
-void	lexgen_node_dump(t_lex_node *node)
+void	gramgen_node_dump(t_gram_node *node)
 {
 
 }
 */
 
-void	lexer_ir_dump(t_lexer_ir *ir)
+void	grammar_ir_dump(t_grammar_ir *ir)
 {
 	size_t				i, j, js, k, ks;
-	t_lex_node			*node;
-	t_lex_definition	*def;
-	t_lex_token			*token;
+	t_gram_node			*node;
+	t_gram_definition	*def;
+	t_gram_token			*token;
 
 	i = 0;
 	while (i < ir->size)
@@ -68,7 +68,7 @@ void	lexer_ir_dump(t_lexer_ir *ir)
 				}
 				else
 				{
-					printf("[%s] ", (char *)((t_lex_node *)token->sig)->nonterminal);
+					printf("[%s] ", (char *)((t_gram_node *)token->sig)->nonterminal);
 				}
 				k++;
 			}

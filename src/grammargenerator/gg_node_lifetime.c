@@ -12,13 +12,13 @@
 
 #include "libft.h"
 #include "vector.h"
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
-t_lex_node	*lexgen_node_create(char *nonterminal)
+t_gram_node	*gramgen_node_create(char *nonterminal)
 {
-	t_lex_node *node;
+	t_gram_node *node;
 
-	node = ft_calloc(sizeof(t_lex_node), 1);
+	node = ft_calloc(sizeof(t_gram_node), 1);
 	if (node)
 	{
 		if (!vector(&node->definitions, V_CREATE, VEC_DEF_SIZE, NULL))
@@ -31,13 +31,13 @@ t_lex_node	*lexgen_node_create(char *nonterminal)
 	return (node);
 }
 
-t_lex_node	*lexgen_node_destroy(t_lex_node *node)
+t_gram_node	*gramgen_node_destroy(t_gram_node *node)
 {
 	if (node)
 	{
 		while (*(size_t *)vector(&node->definitions, V_SIZE, 0, NULL) > 0)
 		{
-			lexgen_definition_destroy(vector(&node->definitions, V_PEEKBACK, 0,
+			gramgen_definition_destroy(vector(&node->definitions, V_PEEKBACK, 0,
 																		NULL));
 			vector(&node->definitions, V_POPBACK, 0, NULL);
 		}

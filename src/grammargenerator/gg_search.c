@@ -13,11 +13,11 @@
 #include "vector.h"
 #include "libft.h"
 
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
-t_lex_node			*lexer_ir_find_node(t_lexer_ir *ir, char *key)
+t_gram_node			*grammar_ir_find_node(t_grammar_ir *ir, char *key)
 {
-	t_lex_node		*node;
+	t_gram_node		*node;
 	size_t			i;
 
 	i = *(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL);

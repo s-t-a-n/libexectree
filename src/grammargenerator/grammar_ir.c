@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_ir.c                                         :+:    :+:            */
+/*   grammar_ir.c                                       :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
@@ -18,7 +18,7 @@
 #include "get_next_line.h"
 
 #include "logger.h"
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
 /*
 ** simple top-down parser for extracting grammar rules from a BNF
@@ -26,31 +26,31 @@
 ** on function length (max 25 lines).
 */
 
-static uint8_t	parse_line(t_lexer_ir *ir, char *line)
+static uint8_t	parse_line(t_grammar_ir *ir, char *line)
 {
-	static t_lex_node *node;
+	static t_gram_node *node;
 
 	if (!*line || *line == '#')
 		return (0);
 	if (line[0] == '<')
 	{
 		line++;
-		if (!(node = lexgen_process_new_nonterminal(ir, &line)))
+		if (!(node = gramgen_process_new_nonterminal(ir, &line)))
 			return (1);
 	}
 #ifdef DEBUG
 	assert(node);
 #endif
-	return (lexgen_process_definitions(ir, node, &line));
+	return (gramgen_process_definitions(ir, node, &line));
 }
 
-t_lexer_ir		*lexer_ir_generate(const char *bnf_fpath)
+t_grammar_ir		*grammar_ir_generate(const char *bnf_fpath)
 {
 	int			fd;
-	t_lexer_ir	*ir;
+	t_grammar_ir	*ir;
 	char		*line;
 
-	if ((ir = lexer_ir_create()))
+	if ((ir = grammar_ir_create()))
 	{
 		if ((fd = open(bnf_fpath, O_RDONLY)) >= 0)
 		{
@@ -60,7 +60,7 @@ t_lexer_ir		*lexer_ir_generate(const char *bnf_fpath)
 				{
 					free(line);
 					close(fd);
-					return (lexer_ir_destroy(ir));
+					return (grammar_ir_destroy(ir));
 				}
 				free(line);
 			}
@@ -69,10 +69,10 @@ t_lexer_ir		*lexer_ir_generate(const char *bnf_fpath)
 		}
 		else
 		{
-			return (lexer_ir_destroy(ir));
+			return (grammar_ir_destroy(ir));
 		}
-		if (lexgen_post_process(ir) != 0)
-			return (lexer_ir_destroy(ir));
+		if (gramgen_post_process(ir) != 0)
+			return (grammar_ir_destroy(ir));
 	}
 	return (ir);
 }

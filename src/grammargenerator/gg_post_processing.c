@@ -14,13 +14,13 @@
 #include "vector.h"
 
 #include "logger.h"
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
-static uint8_t	attempt_stitch(t_lexer_ir *ir, t_lex_token *token)
+static uint8_t	attempt_stitch(t_grammar_ir *ir, t_gram_token *token)
 {
-	t_lex_node *node;
+	t_gram_node *node;
 
-	node = lexer_ir_find_node(ir, (char *)token->sig);
+	node = grammar_ir_find_node(ir, (char *)token->sig);
 	if (node)
 	{
 		token->type = NONTERMINAL;
@@ -32,7 +32,7 @@ static uint8_t	attempt_stitch(t_lexer_ir *ir, t_lex_token *token)
 		return (1);
 }
 
-uint8_t			lexgen_post_process(t_lexer_ir *ir)
+uint8_t			gramgen_post_process(t_grammar_ir *ir)
 {
 	uint8_t	errors;
 	t_list	*lst;
@@ -42,11 +42,11 @@ uint8_t			lexgen_post_process(t_lexer_ir *ir)
 		errors = 0;
 		while (lst)
 		{
-			if (attempt_stitch(ir, (t_lex_token *)lst->subject) != 0)
+			if (attempt_stitch(ir, (t_gram_token *)lst->subject) != 0)
 			{
-				logger(CRIT, 3, "lexer_generator",
+				logger(CRIT, 3, "grammar_generator",
 								"nonterminal has no definition",
-								(char *)((t_lex_token *)lst->subject)->sig);
+								(char *)((t_gram_token *)lst->subject)->sig);
 				errors++;
 			}
 			lst = lst->next;

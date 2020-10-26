@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   lexer_ir_lifetime.c                                :+:    :+:            */
+/*   grammar_ir_lifetime.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
@@ -14,13 +14,13 @@
 #include "libft.h"
 #include "vector.h"
 
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
-t_lexer_ir		*lexer_ir_create(void)
+t_grammar_ir		*grammar_ir_create(void)
 {
-	t_lexer_ir	*ir;
+	t_grammar_ir	*ir;
 
-	ir = ft_calloc(sizeof(t_lexer_ir), 1);
+	ir = ft_calloc(sizeof(t_grammar_ir), 1);
 	if (ir)
 	{
 		if (!vector(&ir->nodes, V_CREATE, VEC_DEF_SIZE, NULL))
@@ -32,7 +32,7 @@ t_lexer_ir		*lexer_ir_create(void)
 	return (ir);
 }
 
-t_lexer_ir		*lexer_ir_destroy(t_lexer_ir *ir)
+t_grammar_ir		*grammar_ir_destroy(t_grammar_ir *ir)
 {
 	unsigned int i;
 
@@ -40,7 +40,7 @@ t_lexer_ir		*lexer_ir_destroy(t_lexer_ir *ir)
 	{
 		while (*(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL) > 0)
 		{
-			lexgen_node_destroy(vector(&ir->nodes, V_PEEKBACK, 0, NULL));
+			gramgen_node_destroy(vector(&ir->nodes, V_PEEKBACK, 0, NULL));
 			vector(&ir->nodes, V_POPBACK, 0, NULL);
 		}
 		i = 0;

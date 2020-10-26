@@ -1,4 +1,4 @@
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 #include "exectree_internal.h"
 
 void			*exectree_create(const char *bnf_fpath)
@@ -8,7 +8,7 @@ void			*exectree_create(const char *bnf_fpath)
 	exectree = ft_calloc(sizeof(t_exectree), 1);
 	if (exectree)
 	{
-		if (!(exectree->lex_ir = lexer_ir_generate(bnf_fpath)))
+		if (!(exectree->gram_ir = grammar_ir_generate(bnf_fpath)))
 			return(exectree_destroy(exectree));
 	}
 	return (exectree);
@@ -21,7 +21,7 @@ void			*exectree_destroy(void *_exectree)
 	if (_exectree)
 	{
 		exectree = (t_exectree *)_exectree;
-		exectree->lex_ir = lexer_ir_destroy(exectree->lex_ir);
+		exectree->gram_ir = grammar_ir_destroy(exectree->gram_ir);
 	}
 	free(_exectree);
 	return (NULL);

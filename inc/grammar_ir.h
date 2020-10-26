@@ -1,6 +1,6 @@
 
-#ifndef LEXER_IR_H
-# define LEXER_IR_H
+#ifndef GRAMMAR_IR_H
+# define GRAMMAR_IR_H
 
 # include "libft.h"
 
@@ -15,51 +15,51 @@
 ** which could be a non-terminal or terminal
 */
 
-typedef enum				s_lex_definition_type
+typedef enum				s_gram_definition_type
 {
 	NONTERMINAL,
 	UNKNOWN_NONTERMINAL,
 	TERMINAL
-}							t_lex_definition_type;
+}							t_gram_definition_type;
 
 /*
 ** sig can be a reference to a definition or be a charstring
 ** signifying a terminal
 */
-typedef struct				s_lex_token
+typedef struct				s_gram_token
 {
-	t_lex_definition_type	type;
+	t_gram_definition_type	type;
 	void					*sig;
-}							t_lex_token;
+}							t_gram_token;
 
-typedef struct				s_lex_definition
+typedef struct				s_gram_definition
 {
 	void					*tokens;
-}							t_lex_definition;
+}							t_gram_definition;
 
-typedef struct				s_lex_node
+typedef struct				s_gram_node
 {
 	char					*nonterminal;
 	void					*definitions;
-}							t_lex_node;
+}							t_gram_node;
 
 /*
 ** jtable contains nodes where first letter of terminal matches as index
 */
-typedef struct				s_lexer_ir
+typedef struct				s_grammar_ir
 {
 	void					*nodes;
 	t_list					*post;
 	t_list					*jtable[JTAB_SIZE];
 	unsigned int			size;
-}							t_lexer_ir;
+}							t_grammar_ir;
 
 
-t_lexer_ir					*lexer_ir_generate(const char *bnf_fpath);
+t_grammar_ir					*grammar_ir_generate(const char *bnf_fpath);
 
-void						lexer_ir_dump(t_lexer_ir *ir);
-t_lexer_ir					*lexer_ir_destroy(t_lexer_ir *ir);
+void						grammar_ir_dump(t_grammar_ir *ir);
+t_grammar_ir					*grammar_ir_destroy(t_grammar_ir *ir);
 
-t_lex_node					*lexer_ir_find_node(t_lexer_ir *ir, char *key);
+t_gram_node					*grammar_ir_find_node(t_grammar_ir *ir, char *key);
 
 #endif

@@ -15,6 +15,6 @@
 
 #include "exectree_internal.h"
 
-t_node		*lexer(t_lexer_ir *ir, char *str);
+t_node		*lexer(t_grammar_ir *gir, char *str);
 
 #endif

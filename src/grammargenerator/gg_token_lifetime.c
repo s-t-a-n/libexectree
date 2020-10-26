@@ -11,15 +11,15 @@
 /* ************************************************************************** */
 
 #include "vector.h"
-#include "lexergenerator.h"
+#include "grammargenerator.h"
 
-t_lex_token	*lexgen_token_create(t_lex_definition_type type, void *sig)
+t_gram_token	*gramgen_token_create(t_gram_definition_type type, void *sig)
 {
-	t_lex_token *token;
+	t_gram_token *token;
 
 	if (sig == NULL)
 		return (NULL);
-	token = malloc(sizeof(t_lex_token));
+	token = malloc(sizeof(t_gram_token));
 	if (token)
 	{
 		token->type = type;
@@ -28,7 +28,7 @@ t_lex_token	*lexgen_token_create(t_lex_definition_type type, void *sig)
 	return (token);
 }
 
-t_lex_token		*lexgen_token_destroy(t_lex_token *token)
+t_gram_token		*gramgen_token_destroy(t_gram_token *token)
 {
 	if (token
 		&& (token->type == TERMINAL || token->type == UNKNOWN_NONTERMINAL))

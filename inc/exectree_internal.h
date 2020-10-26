@@ -18,14 +18,14 @@
 # endif
 
 # include "exectree.h"
-# include "lexer_ir.h"
+# include "grammar_ir.h"
 # include "tree.h"
 
-typedef struct	s_exectree
+typedef struct		s_exectree
 {
-	t_lexer_ir	*lex_ir;
-	t_node		*lex_tree;
-	t_node		*parse_tree;
-}				t_exectree;
+	t_grammar_ir	*gram_ir;
+	t_node			*lex_tree;
+	t_node			*parse_tree;
+}					t_exectree;
 
 #endif
