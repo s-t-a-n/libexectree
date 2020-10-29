@@ -48,16 +48,17 @@ LOG_OBJ :=	$(LOG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 GG_SRC =	$(SRC_D)/grammargenerator/grammar_ir.c							\
 			$(SRC_D)/grammargenerator/grammar_ir_lifetime.c					\
 			$(SRC_D)/grammargenerator/gg_process_production.c				\
-			$(SRC_D)/grammargenerator/gg_process_definitions.c				\
+			$(SRC_D)/grammargenerator/gg_process_rules.c					\
 			$(SRC_D)/grammargenerator/gg_process_nonterminal.c				\
 			$(SRC_D)/grammargenerator/gg_process_word.c						\
 			$(SRC_D)/grammargenerator/gg_process_literal.c					\
-			$(SRC_D)/grammargenerator/gg_definition_lifetime.c				\
-			$(SRC_D)/grammargenerator/gg_node_lifetime.c					\
+			$(SRC_D)/grammargenerator/gg_rule_lifetime.c					\
+			$(SRC_D)/grammargenerator/gg_production_lifetime.c				\
 			$(SRC_D)/grammargenerator/gg_token_lifetime.c					\
 			$(SRC_D)/grammargenerator/gg_dump.c								\
 			$(SRC_D)/grammargenerator/gg_search.c							\
 			$(SRC_D)/grammargenerator/gg_post_processing.c					\
+			$(SRC_D)/grammargenerator/gg_jumptable.c						\
 
 GG_OBJ :=	$(GG_SRC:$(SRC_D)/%.c=$(OBJ_D)/%.o)
 
@@ -173,11 +174,11 @@ $(NAME): $(ALLDEPS)
 	@$(ECHO) "Linking $(NAME)..."
 	@mkdir -p artmp
 	@list='$^'; for p in $$list; do											\
-	    (cd artmp; ar x "../$$p"; ar q "../$@" *.o; rm *.o) 2>$(CC_LOG); done
+	    (cd artmp; ar x "../$$p"; ar q "../$@" *.o; rm *.o) || false 2>$(CC_LOG); done
 	@rm -rf artmp
 	@ranlib $@ 2> $(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 && $(CAT) $(CC_LOG) && false; elif test -s $(CC_LOG); then $(ECHO)		\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
@@ -185,7 +186,7 @@ $(COMMON): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LOGGER) $(OBJ_D) $(OBJ)
 	@$(ECHO) "Linking $(COMMON)..."
 	@$(LD) $(LD_FLAGS) $(COMMON) $(OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 && $(CAT) $(CC_LOG) && false; elif test -s $(CC_LOG); then $(ECHO)		\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
@@ -193,7 +194,7 @@ $(TREE): $(GIT_MODULES) $(LIBFT) $(LOGGER) $(OBJ_D) $(TREE_OBJ)
 	@$(ECHO) "Linking $(TREE)..."
 	@$(LD) $(LD_FLAGS) $(TREE) $(TREE_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 && $(CAT) $(CC_LOG) && false; elif test -s $(CC_LOG); then $(ECHO)		\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
@@ -201,35 +202,35 @@ $(LOGGER): $(GIT_MODULES) $(LIBFT) $(OBJ_D) $(LOG_OBJ)
 	@$(ECHO) "Linking $(LOGGER)..."
 	@$(LD) $(LD_FLAGS) $(LOGGER) $(LOG_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 && $(CAT) $(CC_LOG) && false; elif test -s $(CC_LOG); then $(ECHO)		\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-$(GRAMMARGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
+$(GRAMMARGENERATOR): $(GIT_MODULES) $(LIBGNL) $(LIBFT) $(LIBVECTOR) $(LOGGER)\
 		$(OBJ_D) $(GG_OBJ)
 	@$(ECHO) "Linking $(GRAMMARGENERATOR)..."
-	@$(LD) $(LD_FLAGS) $(GRAMMARGENERATOR) $(GG_OBJ) 2>$(CC_LOG)				\
+	@$(LD) $(LD_FLAGS) $(GRAMMARGENERATOR) $(GG_OBJ) 2>$(CC_LOG)			\
 	|| touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 && $(CAT) $(CC_LOG) && false; elif test -s $(CC_LOG); then $(ECHO)		\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-$(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
+$(LEXER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)					\
 		$(OBJ_D) $(LEX_OBJ)
 	@$(ECHO) "Linking $(LEXER)..."
 	@$(LD) $(LD_FLAGS) $(LEXER) $(LEX_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 && $(CAT) $(CC_LOG) && false; elif test -s $(CC_LOG); then $(ECHO)		\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-$(PARSER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)	\
+$(PARSER): $(GIT_MODULES) $(LIBFT) $(LIBVECTOR) $(LOGGER)					\
 		$(OBJ_D) $(PARSE_OBJ)
 	@$(ECHO) "Linking $(PARSER)..."
 	@$(LD) $(LD_FLAGS) $(PARSER) $(PARSE_OBJ) 2>$(CC_LOG) || touch $(CC_ERROR)
 	@if test -e $(CC_ERROR); then $(ECHO) "$(ERROR_STRING)\n"				\
-	 && $(CAT) $(CC_LOG); elif test -s $(CC_LOG); then $(ECHO)				\
+	 && $(CAT) $(CC_LOG) && false; elif test -s $(CC_LOG); then $(ECHO)		\
 	 "$(WARN_STRING)\n" && $(CAT) $(CC_LOG); else $(ECHO) "$(OK_STRING)\n"; fi
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
@@ -297,13 +298,13 @@ $(PARSE_OBJ): $(OBJ_D)/%.o: $(SRC_D)/%.c
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
 $(LIBGNL):
-	@make -C $(LIB_D)/libgnl
+	@$(MAKE) -C $(LIB_D)/libgnl
 
 $(LIBFT):
-	@make -C $(LIB_D)/libft
+	@$(MAKE) -C $(LIB_D)/libft
 
 $(LIBVECTOR):
-	@make -C $(LIB_D)/libvector
+	@$(MAKE) -C $(LIB_D)/libvector
 
 clean:
 	@$(RM) $(OBJ)
@@ -311,15 +312,15 @@ clean:
 	@$(RM) *.testbin
 	@$(RM) -r artmp
 	@$(RM) -r $(OBJ_D)
-	@make -C $(LIB_D)/libgnl clean || true
-	@make -C $(LIB_D)/libft clean || true
-	@make -C $(LIB_D)/libvector clean || true
+	@$(MAKE) -C $(LIB_D)/libgnl clean || true
+	@$(MAKE) -C $(LIB_D)/libft clean || true
+	@$(MAKE) -C $(LIB_D)/libvector clean || true
 
 fclean: clean
 	@$(RM) $(ALLDEPS) $(NAME)
-	@make -C $(LIB_D)/libgnl fclean || true
-	@make -C $(LIB_D)/libft fclean || true
-	@make -C $(LIB_D)/libvector fclean || true
+	@$(MAKE) -C $(LIB_D)/libgnl fclean || true
+	@$(MAKE) -C $(LIB_D)/libft fclean || true
+	@$(MAKE) -C $(LIB_D)/libvector fclean || true
 
 norm:
 	@norminette $(SRC) $(INC)
