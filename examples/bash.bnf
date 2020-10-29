@@ -3,8 +3,9 @@
 
 # deviation from standard BNF:
 #	left side non-terminals in capitals mark lexer objects
-#	{} marks a terminal or non-terminal that may be repeated or omitted
-#	<key, key> or {key, key} signifies that multiple keys may be hit
+#	left side || marks a recursive non-terminal which has it's own subrules (for expansion)
+#	right side {} marks a terminal or non-terminal that may be repeated or omitted
+#	right side <key, key> or {key, key} signifies that multiple keys may be hit
 
 <LETTER> ::= a
            | b
@@ -111,9 +112,18 @@
          | <word> '_'
 		 | '\'' {WORD, NUMBER, SPACE, SYMBOL} '\''
 
-<STRING> ::= '"' {WORD, NUMBER, SPACE, SYMBOL} '"'
+|STRING| ::= '"' {WORD, NUMBER, SPACE, SYMBOL} '"'
 
 <assignment> ::= <word> '=' <word>
+<variable> ::= '$' <word>
+
+|string->variable| ::= '$' <word>
+|string->subshell_variable| ::= <subshell_variable>
+|string->word| ::= <word>
+|string->number| ::= <number>
+
+|subshell| := '(' <command, command_chain> ')'
+<subshell_variable> ::= '$' |subshell|
 
 <redirection> ::=  '>' <word>
                 |  '<' <word>
