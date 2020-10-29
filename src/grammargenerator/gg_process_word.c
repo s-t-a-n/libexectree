@@ -16,7 +16,7 @@
 #include "logger.h"
 #include "grammargenerator.h"
 
-uint8_t				gg_process_word(t_gram_definition *def, char **line)
+uint8_t				gg_process_word(t_gram_rule *def, char **line)
 {
 	t_gram_token	*token;
 	char			*word;
@@ -33,7 +33,7 @@ uint8_t				gg_process_word(t_gram_definition *def, char **line)
 		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
 		{
 			logger(INFO, 3, "grammar_generator",
-							"adding (word) terminal to definition",
+							"adding (word) terminal to rule",
 							word);
 			return (0);
 		}

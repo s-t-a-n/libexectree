@@ -14,6 +14,9 @@
 
 #include "grammar_ir.h"
 
+# define PRODUCTION_OPENSET		"<{|"
+# define PRODUCTION_CLOSESET	">}|"
+
 # define VEC_DEF_SIZE	24
 
 /*
@@ -24,27 +27,29 @@
 
 t_grammar_ir		*grammar_ir_create(void);
 
-t_gram_node			*gramgen_process_new_production(t_grammar_ir *ir, char **line);
-uint8_t				gramgen_process_definitions(t_grammar_ir *ir, t_gram_node *node, char **line);
-uint8_t				gg_process_word(t_gram_definition *def, char **line);
-uint8_t				gg_process_literal(t_gram_definition *def, char **line);
-uint8_t				gg_process_nonterminal(			t_gram_node *node,
-													t_gram_definition *def,
+t_gram_production			*gramgen_process_new_production(t_grammar_ir *ir, char **line);
+uint8_t				gramgen_process_rules(t_grammar_ir *ir, t_gram_production *production, char **line);
+uint8_t				gg_process_word(t_gram_rule *def, char **line);
+uint8_t				gg_process_literal(t_gram_rule *def, char **line);
+uint8_t				gg_process_nonterminal(			t_gram_production *production,
+													t_gram_rule *def,
 													t_grammar_ir *ir,
 													char **line);
-uint8_t				gg_process_unbound_nonterminal(	t_gram_node *node,
-													t_gram_definition *def,
+uint8_t				gg_process_unbound_nonterminal(	t_gram_production *production,
+													t_gram_rule *def,
 													t_grammar_ir *ir,
 													char **line);
 
-t_gram_node			*gramgen_node_create(char *nonterminal, t_gram_node_type type);
-t_gram_node			*gramgen_node_destroy(t_gram_node *node);
+t_gram_production			*gramgen_production_create(char *nonterminal, t_gram_production_type type);
+t_gram_production			*gramgen_production_destroy(t_gram_production *production);
 
-t_gram_definition	*gramgen_definition_create(void);
-t_gram_definition	*gramgen_definition_destroy(t_gram_definition *def);
+t_gram_rule	*gramgen_rule_create(void);
+t_gram_rule	*gramgen_rule_destroy(t_gram_rule *def);
 
-t_gram_token		*gramgen_token_create(t_gram_definition_type type, void *sig);
+t_gram_token		*gramgen_token_create(t_gram_rule_type type, void *sig);
 t_gram_token		*gramgen_token_destroy(t_gram_token *token);
+
+void				*gramgen_lex_lookup_add(t_list **tab, char *line, void *subject);
 
 uint8_t				gramgen_post_process(t_grammar_ir *ir);
 

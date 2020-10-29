@@ -23,7 +23,7 @@ t_grammar_ir		*grammar_ir_create(void)
 	ir = ft_calloc(sizeof(t_grammar_ir), 1);
 	if (ir)
 	{
-		if (!vector(&ir->nodes, V_CREATE, VEC_DEF_SIZE, NULL))
+		if (!vector(&ir->productions, V_CREATE, VEC_DEF_SIZE, NULL))
 		{
 			free(ir);
 			return (NULL);
@@ -38,15 +38,15 @@ t_grammar_ir		*grammar_ir_destroy(t_grammar_ir *ir)
 
 	if (ir)
 	{
-		while (*(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL) > 0)
+		while (*(size_t *)vector(&ir->productions, V_SIZE, 0, NULL) > 0)
 		{
-			gramgen_node_destroy(vector(&ir->nodes, V_PEEKBACK, 0, NULL));
-			vector(&ir->nodes, V_POPBACK, 0, NULL);
+			gramgen_production_destroy(vector(&ir->productions, V_PEEKBACK, 0, NULL));
+			vector(&ir->productions, V_POPBACK, 0, NULL);
 		}
 		i = 0;
-		while (i < JTAB_SIZE)
-			lst_destroy(&ir->jtable[i++], false);
-		vector(&ir->nodes, V_DESTROY, false, NULL);
+		while (i < SYMBOL_SETSIZE)
+			lst_destroy(&ir->lex_lookup[i++], false);
+		vector(&ir->productions, V_DESTROY, false, NULL);
 	}
 	free(ir);
 	return (NULL);

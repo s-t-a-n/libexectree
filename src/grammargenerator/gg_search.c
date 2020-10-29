@@ -15,17 +15,17 @@
 
 #include "grammargenerator.h"
 
-t_gram_node			*grammar_ir_find_node(t_grammar_ir *ir, char *key)
+t_gram_production			*grammar_ir_find_production(t_grammar_ir *ir, char *key)
 {
-	t_gram_node		*node;
+	t_gram_production		*production;
 	size_t			i;
 
-	i = *(size_t *)vector(&ir->nodes, V_SIZE, 0, NULL);
+	i = *(size_t *)vector(&ir->productions, V_SIZE, 0, NULL);
 	while (i > 0)
 	{
-		node = vector(&ir->nodes, V_PEEKAT, i - 1, NULL);
-		if (ft_strcmp(node->nonterminal, key) == 0)
-			return (node);
+		production = vector(&ir->productions, V_PEEKAT, i - 1, NULL);
+		if (ft_strcmp(production->nonterminal, key) == 0)
+			return (production);
 		i--;
 	}
 	return (NULL);

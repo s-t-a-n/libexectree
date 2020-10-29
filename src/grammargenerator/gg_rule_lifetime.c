@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   definition_lifetime.c                              :+:    :+:            */
+/*   rule_lifetime.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
@@ -13,11 +13,11 @@
 #include "vector.h"
 #include "grammargenerator.h"
 
-t_gram_definition	*gramgen_definition_create(void)
+t_gram_rule	*gramgen_rule_create(void)
 {
-	t_gram_definition *def;
+	t_gram_rule *def;
 
-	def = malloc(sizeof(t_gram_definition));
+	def = malloc(sizeof(t_gram_rule));
 	if (def)
 	{
 		if (!vector(&def->tokens, V_CREATE, VEC_DEF_SIZE, NULL))
@@ -29,7 +29,7 @@ t_gram_definition	*gramgen_definition_create(void)
 	return (def);
 }
 
-t_gram_definition	*gramgen_definition_destroy(t_gram_definition *def)
+t_gram_rule	*gramgen_rule_destroy(t_gram_rule *def)
 {
 	if (def)
 	{

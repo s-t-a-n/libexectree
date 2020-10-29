@@ -13,7 +13,7 @@
 #include "vector.h"
 #include "grammargenerator.h"
 
-t_gram_token	*gramgen_token_create(t_gram_definition_type type, void *sig)
+t_gram_token	*gramgen_token_create(t_gram_rule_type type, void *sig)
 {
 	t_gram_token *token;
 

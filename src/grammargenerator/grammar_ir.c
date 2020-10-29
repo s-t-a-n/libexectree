@@ -20,35 +20,29 @@
 #include "logger.h"
 #include "grammargenerator.h"
 
-/*
-** simple top-down parser for extracting grammar rules from a BNF
-** file. excuse the mess; 42 requires 'norminette' which is superrestrictive
-** on function length (max 25 lines).
-*/
-
-static uint8_t	parse_line(t_grammar_ir *ir, char *line)
+static uint8_t		parse_line(t_grammar_ir *ir, char *line)
 {
-	static t_gram_node *node;
+	static t_gram_production *production;
 
 	if (!*line || *line == '#' || !*ft_strscan(line) || *ft_strscan(line) == '#')
 		return (0);
 	if (line[0] == '<')
 	{
 		line++;
-		if (!(node = gramgen_process_new_production(ir, &line)))
+		if (!(production = gramgen_process_new_production(ir, &line)))
 			return (1);
 	}
 #ifdef DEBUG
-	assert(node);
+	assert(production);
 #endif
-	return (gramgen_process_definitions(ir, node, &line));
+	return (gramgen_process_rules(ir, production, &line));
 }
 
 t_grammar_ir		*grammar_ir_generate(const char *bnf_fpath)
 {
-	int			fd;
+	int				fd;
 	t_grammar_ir	*ir;
-	char		*line;
+	char			*line;
 
 	if ((ir = grammar_ir_create()))
 	{
@@ -68,9 +62,7 @@ t_grammar_ir		*grammar_ir_generate(const char *bnf_fpath)
 			close(fd);
 		}
 		else
-		{
 			return (grammar_ir_destroy(ir));
-		}
 		if (gramgen_post_process(ir) != 0)
 			return (grammar_ir_destroy(ir));
 	}

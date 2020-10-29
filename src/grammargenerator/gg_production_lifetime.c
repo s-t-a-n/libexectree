@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   node_lifetime.c                                    :+:    :+:            */
+/*   production_lifetime.c                                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
@@ -14,37 +14,37 @@
 #include "vector.h"
 #include "grammargenerator.h"
 
-t_gram_node	*gramgen_node_create(char *nonterminal, t_gram_node_type type)
+t_gram_production	*gramgen_production_create(char *nonterminal, t_gram_production_type type)
 {
-	t_gram_node *node;
+	t_gram_production *production;
 
-	node = ft_calloc(sizeof(t_gram_node), 1);
-	if (node)
+	production = ft_calloc(sizeof(t_gram_production), 1);
+	if (production)
 	{
-		if (!vector(&node->definitions, V_CREATE, VEC_DEF_SIZE, NULL))
+		if (!vector(&production->rules, V_CREATE, VEC_DEF_SIZE, NULL))
 		{
-			free(node);
+			free(production);
 			return (NULL);
 		}
-		node->nonterminal = nonterminal;
-		node->type = type;
+		production->nonterminal = nonterminal;
+		production->type = type;
 	}
-	return (node);
+	return (production);
 }
 
-t_gram_node	*gramgen_node_destroy(t_gram_node *node)
+t_gram_production	*gramgen_production_destroy(t_gram_production *production)
 {
-	if (node)
+	if (production)
 	{
-		while (*(size_t *)vector(&node->definitions, V_SIZE, 0, NULL) > 0)
+		while (*(size_t *)vector(&production->rules, V_SIZE, 0, NULL) > 0)
 		{
-			gramgen_definition_destroy(vector(&node->definitions, V_PEEKBACK, 0,
+			gramgen_rule_destroy(vector(&production->rules, V_PEEKBACK, 0,
 																		NULL));
-			vector(&node->definitions, V_POPBACK, 0, NULL);
+			vector(&production->rules, V_POPBACK, 0, NULL);
 		}
-		vector(&node->definitions, V_DESTROY, false, NULL);
-		free(node->nonterminal);
+		vector(&production->rules, V_DESTROY, false, NULL);
+		free(production->nonterminal);
 	}
-	free(node);
+	free(production);
 	return (NULL);
 }

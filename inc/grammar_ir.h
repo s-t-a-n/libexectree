@@ -4,18 +4,19 @@
 
 # include "libft.h"
 
-# define JTAB_SIZE	127
+# define SYMBOL_SETSIZE		127
 
 /*
 ** To protect sanity:
 ** An intermediate representation of the formal syntax grammer (as supplied
-** by an BNF file) consists of a vector of nodes which each define one
+** by an BNF file) consists of a vector of productions which each define one
 ** non-terminal. These non-terminal are then each defined as a vector of
-** definitions. Each definition is then defined as a vector of 'tokens'
+** rules. Each rule is then defined as a vector of 'tokens'
 ** which could be a non-terminal or terminal
 */
 
-typedef enum				s_gram_definition_type
+typedef void				t_vector;
+typedef enum				s_gram_rule_type
 {
 	NONTERMINAL,
 	NONTERMINAL_MULT,
@@ -23,44 +24,47 @@ typedef enum				s_gram_definition_type
 	UNBOUND_NONTERMINAL_MULT,
 	TERMINAL,
 	UNKNOWN
-}							t_gram_definition_type;
+}							t_gram_rule_type;
 
 /*
-** sig can be a reference to a definition or be a charstring
-** signifying a terminal
+** sig can be a non-terminal referring to a rule (gram_production)
+** or be a terminal referring to a char (char-string)
 */
+
 typedef struct				s_gram_token
 {
-	t_gram_definition_type	type;
+	t_gram_rule_type		type;
+	// jtable
 	void					*sig;
 }							t_gram_token;
 
-typedef struct				s_gram_definition
+typedef struct				s_gram_rule
 {
-	void					*tokens;
-}							t_gram_definition;
+	t_vector				*tokens; // vec
+}							t_gram_rule;
 
-typedef enum				s_gram_node_type
+typedef enum				s_gram_production_type
 {
 	PARSER_OBJECT,
 	LEXER_OBJECT
-}							t_gram_node_type;
+}							t_gram_production_type;
 
-typedef struct				s_gram_node
+typedef struct				s_gram_production
 {
-	t_gram_node_type		type;
+	t_gram_production_type		type;
 	char					*nonterminal;
-	void					*definitions;
-}							t_gram_node;
+	t_vector					*rules;
+}							t_gram_production;
 
 /*
-** jtable contains nodes where first letter of terminal matches as index
+** jtable contains productions where first letter of terminal matches as index
 */
 typedef struct				s_grammar_ir
 {
-	void					*nodes;
+	t_vector				*productions;
 	t_list					*post;
-	t_list					*jtable[JTAB_SIZE];
+	t_list					*lex_lookup[SYMBOL_SETSIZE];
+	t_vector				*parse_lookup; // vec
 	unsigned int			size;
 }							t_grammar_ir;
 
@@ -70,6 +74,6 @@ t_grammar_ir				*grammar_ir_generate(const char *bnf_fpath);
 void						grammar_ir_dump(t_grammar_ir *ir);
 t_grammar_ir				*grammar_ir_destroy(t_grammar_ir *ir);
 
-t_gram_node					*grammar_ir_find_node(t_grammar_ir *ir, char *key);
+t_gram_production					*grammar_ir_find_production(t_grammar_ir *ir, char *key);
 
 #endif

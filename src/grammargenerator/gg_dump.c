@@ -25,12 +25,12 @@ void	gramgen_token_dump(t_gram_token *token)
 
 }
 
-void	gramgen_definition_dump(t_gram_definition *def)
+void	gramgen_rule_dump(t_gram_rule *def)
 {
 
 }
 
-void	gramgen_node_dump(t_gram_node *node)
+void	gramgen_production_dump(t_gram_production *production)
 {
 
 }
@@ -39,22 +39,22 @@ void	gramgen_node_dump(t_gram_node *node)
 void	grammar_ir_dump(t_grammar_ir *ir)
 {
 	size_t				i, j, js, k, ks;
-	t_gram_node			*node;
-	t_gram_definition	*def;
+	t_gram_production			*production;
+	t_gram_rule	*def;
 	t_gram_token			*token;
 
 	i = 0;
 	while (i < ir->size)
 	{
-		node = vector(&ir->nodes, V_PEEKAT, i, NULL);
-		assert(node);
-		printf("\n**** %s ****", node->nonterminal);
-		js = *(size_t *)vector(&node->definitions, V_SIZE, 0, NULL);
+		production = vector(&ir->productions, V_PEEKAT, i, NULL);
+		assert(production);
+		printf("\n**** %s ****", production->nonterminal);
+		js = *(size_t *)vector(&production->rules, V_SIZE, 0, NULL);
 		j = 0;
 		while (j < js)
 		{
 			printf("%s", "\n| ");
-			def = vector(&node->definitions, V_PEEKAT, j, NULL);
+			def = vector(&production->rules, V_PEEKAT, j, NULL);
 			assert(def);
 			ks = *(size_t *)vector(&def->tokens, V_SIZE, 0, NULL);
 			k = 0;
@@ -68,7 +68,7 @@ void	grammar_ir_dump(t_grammar_ir *ir)
 				}
 				else
 				{
-					printf("[%s] ", (char *)((t_gram_node *)token->sig)->nonterminal);
+					printf("[%s] ", (char *)((t_gram_production *)token->sig)->nonterminal);
 				}
 				k++;
 			}
