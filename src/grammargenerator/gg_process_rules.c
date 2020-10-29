@@ -38,7 +38,7 @@ uint8_t					gramgen_process_rules(t_grammar_ir *ir,
 //					logger(CRIT, 2, "grammar_generator", "add to jump table failed!");
 				if (ft_isinset(**line, "'"))
 					errors += gg_process_literal(def, line);
-				else if (ft_isinset(**line, "<{"))
+				else if (ft_isinset(**line, PRODUCTION_OPENSET))
 					errors += gg_process_nonterminal(production, def, ir, line);
 				else if (ft_isalnum(**line) || **line == '_')
 					errors += gg_process_word(def, line);

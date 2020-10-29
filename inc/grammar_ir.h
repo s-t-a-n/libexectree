@@ -22,6 +22,7 @@ typedef enum				s_gram_rule_type
 	NONTERMINAL_MULT,
 	UNBOUND_NONTERMINAL,
 	UNBOUND_NONTERMINAL_MULT,
+	RECURSIVE_NONTERMINAL,
 	TERMINAL,
 	UNKNOWN
 }							t_gram_rule_type;

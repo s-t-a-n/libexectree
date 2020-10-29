@@ -61,18 +61,19 @@ static t_gram_rule_type get_type(char **line, char *d)
 	if (**line == '<')
 	{
 		*d = '>';
-		if (ft_strclen(*line, ',') < ft_strclen(*line, *d))
-			type = NONTERMINAL_MULT;
-		else
-			type = NONTERMINAL;
+		type = ft_strclen(*line, ',') < ft_strclen(*line, *d)
+				? NONTERMINAL_MULT : NONTERMINAL;
 	}
 	else if (**line == '{')
 	{
 		*d = '}';
-		if (ft_strclen(*line, ',') < ft_strclen(*line, *d))
-			type = UNBOUND_NONTERMINAL_MULT;
-		else
-			type = UNBOUND_NONTERMINAL;
+		type = ft_strclen(*line, ',') < ft_strclen(*line, *d)
+				? UNBOUND_NONTERMINAL_MULT : UNBOUND_NONTERMINAL;
+	}
+	else if (**line == '|')
+	{
+		*d = '|';
+		type = RECURSIVE_NONTERMINAL;
 	}
 	else
 	{
@@ -95,7 +96,7 @@ uint8_t				gg_process_nonterminal(t_gram_production *production,
 	size_t					keylen;
 
 	type = get_type(line, &delimiter);
-	// loop this, and add multiple keys to token
+	// loop this using ft_strtok, and add multiple keys to token
 	keylen = ft_strclen(*line, delimiter);
 	if ((key = ft_strsub(*line, 0, keylen)))
 	{
