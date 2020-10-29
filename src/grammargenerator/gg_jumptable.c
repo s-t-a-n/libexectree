@@ -25,3 +25,8 @@ void				*gramgen_lex_lookup_add(t_list **tab,
 //
 //	return (lst_addback(&tab[index], subject));
 //}
+
+//size_t				gramgen_parse_lookup_add(void *vec, )
+//{
+//
+//}
