@@ -84,37 +84,57 @@ static t_gram_rule_type get_type(char **line, char *d)
 	return (type);
 }
 
+static uint8_t		add_token_for_key(	t_gram_production *production,
+										t_gram_rule *def,
+										t_grammar_ir *ir,
+										char *key)
+{
+	t_gram_token	*token;
+
+	token = gen_token_single(ir, production, key);
+	if (token)
+	{
+		if (vector(&def->tokens, V_PUSHBACK, 0, token))
+		{
+			logger(INFO, production ? 3 : 4,
+						"grammar_generator",
+						"adding nonterminal to rule",
+						key, production ? "" : "adding to Post!");
+			return (0);
+		}
+	}
+	gramgen_token_destroy(token);
+	return (1);
+}
+
 uint8_t				gg_process_nonterminal(t_gram_production *production,
 											t_gram_rule *def,
 											t_grammar_ir *ir,
 											char **line)
 {
-	t_gram_token			*token;
-	t_gram_rule_type	type;
+	t_gram_rule_type		type;
 	char					*key;
 	char					delimiter;
 	size_t					keylen;
 
 	type = get_type(line, &delimiter);
 	// loop this using ft_strtok, and add multiple keys to token
+	if (ft_strclen(*line, ',') < ft_strcsetlen(*line, PRODUCTION_CLOSESET))
+	{
+		// multi key
+		key = ft_strtok(*line, ",");
+		printf("key is : |%s|\n", key);
+		assert(!"HELLO");
+	}
+	else
+	{
+		// single key
+	}
 	keylen = ft_strclen(*line, delimiter);
 	if ((key = ft_strsub(*line, 0, keylen)))
 	{
-		token = gen_token_single(ir, production, key);
-		if (token)
-		{
-			if (vector(&def->tokens, V_PUSHBACK, 0, token))
-			{
-				logger(INFO, production ? 3 : 4,
-							"grammar_generator",
-							"adding nonterminal to rule",
-							key, production ? "" : "adding to Post!");
-				(*line) += keylen + (*(*line + keylen) ? 1 : 0);
-				free(key);
-				return (0);
-			}
-		}
-		gramgen_token_destroy(token);
+		(*line) += keylen + (*(*line + keylen) ? 1 : 0);
+		add_token_for_key(production, def, ir, key);
 		free(key);
 	}
 	return (1);

@@ -4,6 +4,7 @@
 
 #ifdef DEBUG
 # include <stdio.h>
+# include <assert.h>
 #endif
 
 #include <stdint.h>

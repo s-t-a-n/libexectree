@@ -25,7 +25,7 @@ uint8_t					gramgen_process_rules(t_grammar_ir *ir,
 
 	*line = ft_strscan(*line);
 	errors = 0;
-	if (**line == '|' || **line == '=')
+	if (ft_isinset(**line, "|="))
 	{
 		def = gramgen_rule_create();
 		if (def)
@@ -36,7 +36,7 @@ uint8_t					gramgen_process_rules(t_grammar_ir *ir,
 			{
 //				if (!add_to_jtable(ir, production, *line))
 //					logger(CRIT, 2, "grammar_generator", "add to jump table failed!");
-				if (ft_isinset(**line, "'"))
+				if (ft_isinset(**line, "'\""))
 					errors += gg_process_literal(def, line);
 				else if (ft_isinset(**line, PRODUCTION_OPENSET))
 					errors += gg_process_nonterminal(production, def, ir, line);
