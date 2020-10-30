@@ -123,8 +123,8 @@ uint8_t				gg_process_nonterminal(t_gram_production *production,
 	{
 		// multi key
 		key = ft_strtok(*line, ",");
-		printf("key is : |%s|\n", key);
-		assert(!"HELLO");
+		//printf("key is : |%s|\n", key);
+		//assert(!"HELLO");
 	}
 	else
 	{
