@@ -16,7 +16,7 @@ NAME				= libexectree.a
 COMMON          	= common.a
 TREE				= node.a
 LOGGER				= logger.a
-GRAMMARGENERATOR	= lexergenerator.a
+GRAMMARGENERATOR	= grammargenerator.a
 LEXER				= lexer.a
 PARSER				= parser.a
 ALLDEPS         	= $(COMMON) $(TREE) $(LOGGER) $(GRAMMARGENERATOR) $(LEXER) $(PARSER)
@@ -328,7 +328,7 @@ norm:
 re: fclean all
 
 basics_test: TEST='basics_t'
-basics_test: $(NAME) $(ALLDEPS)
+basics_test: $(ALLDEPS) $(NAME)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin	\
 		tests/$(TEST).c $(NAME) $(ALLDEPS) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
