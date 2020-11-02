@@ -113,6 +113,8 @@ tags
 obj
 .refresh
 artmp
+.cc.error
+.cc.log
 *.log
 *.testbin
 libexectree.a
