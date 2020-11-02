@@ -17,6 +17,7 @@
 
 # define PRODUCTION_OPENSET		"<{|"
 # define PRODUCTION_CLOSESET	">}|"
+# define PRODUCTION_DELIMSET	","
 
 # define VEC_DEF_SIZE	24
 
