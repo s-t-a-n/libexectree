@@ -328,7 +328,7 @@ norm:
 re: fclean all
 
 basics_test: TEST='basics_t'
-basics_test: $(NAME)
+basics_test: $(NAME) $(ALLDEPS)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC)-o $(TEST).testbin	\
 		tests/$(TEST).c $(NAME) $(ALLDEPS) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
@@ -339,8 +339,8 @@ basics_test: $(NAME)
 	@$(DBG) ./$(TEST).testbin examples/bash.bnf "$(CMD)"
 	@$(RM) -f $(CC_LOG) $(CC_ERROR)
 
-lexer_generator_test: TEST='lexer_generator_t'
-lexer_generator_test: $(GRAMMARGENERATOR)
+grammargenerator_test: TEST='grammargenerator_t'
+grammargenerator_test: $(GRAMMARGENERATOR)
 	@$(ECHO) "Compiling $(TEST).c..." 2>$(CC_LOG) || touch $(CC_ERROR)
 	@$(CC) $(CC_FLAGS) $(T_FLAGS) -I$(INC_D) $(LIB_INC) -o $(TEST).testbin	\
 		tests/$(TEST).c $(ALLDEPS) $(LIBGNL) $(LIBFT) $(LIBVECTOR)
@@ -366,7 +366,7 @@ lexer_test: $(GRAMMARGENERATOR) $(LEXER)
 tests:
 	@$(MAKE) ASAN=1 re
 	@$(MAKE) ASAN=1 basics_test
-	@$(MAKE) ASAN=1 lexer_generator_test
+	@$(MAKE) ASAN=1 grammargenerator_test
 	@$(MAKE) ASAN=1 lexer_test
 
 .PHONY: all clean fclean re tests
