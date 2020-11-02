@@ -110,9 +110,9 @@
 <WORD> ::= <letter>
          | <word> <letter>
          | <word> '_'
-		 | '\'' {WORD, NUMBER, SPACE, SYMBOL} '\''
+		 | '\'' {WORD,NUMBER,SPACE,SYMBOL} '\''
 
-|STRING| ::= '"' {WORD, NUMBER, SPACE, SYMBOL} '"'
+|STRING| ::= '"' {WORD,NUMBER,SPACE,SYMBOL} '"'
 
 <assignment> ::= <word> '=' <word>
 <variable> ::= '$' <word>
@@ -122,7 +122,7 @@
 |string->word| ::= <word>
 |string->number| ::= <number>
 
-|subshell| := '(' <command, command_chain> ')'
+|subshell| := '(' <command,command_chain> ')'
 <subshell_variable> ::= '$' |subshell|
 
 <redirection> ::=  '>' <word>
