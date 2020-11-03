@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   process_literal.c                                  :+:    :+:            */
+/*   process_terminal.c                                 :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: sverschu <sverschu@student.codam.n>          +#+                     */
 /*                                                   +#+                      */
@@ -16,30 +16,43 @@
 #include "logger.h"
 #include "grammargenerator.h"
 
-uint8_t				gg_process_literal(t_gram_rule *def, char **line)
+static uint8_t		push_token(	t_gram_rule *rule,
+								t_gram_token *token)
+{
+	if (token && vector(&rule->tokens, V_PUSHBACK, 0, token))
+	{
+		logger(INFO, 3, "grammar_generator",
+						"adding (terminal) terminal to rule",
+						token->terminal);
+		return (0);
+	}
+	return (1);
+}
+
+uint8_t				gg_process_terminal(t_grammar_ir *ir,
+										t_gram_rule *rule,
+										t_gram_production *prod,
+										char **line)
 {
 	t_gram_token	*token;
-	char			*word;
-	size_t			wordlen;
+	char			closechar;
+	char			*key;
+	size_t			keylen;
 
+	closechar = **line;
 	(*line)++;
-	wordlen = 0;
-	while (*(*line + wordlen) != '\'' || *(*line + wordlen - 1) == '\\')
-		wordlen++;
-	word = ft_strsub(*line, 0, wordlen);
-	(*line) += wordlen + (*(*line + wordlen) ? 1 : 0);
-	if (word)
+	keylen = ft_strstringlen(*line);
+	key = ft_strsub(*line, 0, keylen);
+	if (key)
 	{
-		token = gramgen_token_create(TERMINAL, word);
-		if (token && vector(&def->tokens, V_PUSHBACK, 0, token))
+		token = gramgen_token_create(TERMINAL, prod, key);
+		if (push_token(rule, token) == 0 && gramgen_lex_jtable_add(ir->lex_jtable, token))
 		{
-			logger(INFO, 3, "grammar_generator",
-							"adding (literal) terminal to rule",
-							word);
+			(*line) += keylen + (*(*line + keylen) ? 1 : 0);
 			return (0);
 		}
+		free(key);
 		gramgen_token_destroy(token);
-		free(word);
 	}
 	return (1);
 }
