@@ -50,8 +50,7 @@ GG_SRC =	$(SRC_D)/grammargenerator/grammar_ir.c							\
 			$(SRC_D)/grammargenerator/gg_process_production.c				\
 			$(SRC_D)/grammargenerator/gg_process_rules.c					\
 			$(SRC_D)/grammargenerator/gg_process_nonterminal.c				\
-			$(SRC_D)/grammargenerator/gg_process_word.c						\
-			$(SRC_D)/grammargenerator/gg_process_literal.c					\
+			$(SRC_D)/grammargenerator/gg_process_terminal.c					\
 			$(SRC_D)/grammargenerator/gg_rule_lifetime.c					\
 			$(SRC_D)/grammargenerator/gg_production_lifetime.c				\
 			$(SRC_D)/grammargenerator/gg_token_lifetime.c					\
