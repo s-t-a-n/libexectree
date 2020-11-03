@@ -29,29 +29,31 @@
 
 t_grammar_ir		*grammar_ir_create(void);
 
-t_gram_production			*gramgen_process_new_production(t_grammar_ir *ir, char **line);
-uint8_t				gramgen_process_rules(t_grammar_ir *ir, t_gram_production *production, char **line);
-uint8_t				gg_process_word(t_gram_rule *def, char **line);
-uint8_t				gg_process_literal(t_gram_rule *def, char **line);
-uint8_t				gg_process_nonterminal(			t_gram_production *production,
-													t_gram_rule *def,
-													t_grammar_ir *ir,
-													char **line);
-uint8_t				gg_process_unbound_nonterminal(	t_gram_production *production,
-													t_gram_rule *def,
-													t_grammar_ir *ir,
-													char **line);
+t_gram_production	*gramgen_process_new_production(t_grammar_ir *ir, char **line);
+uint8_t				gramgen_process_rules(	t_grammar_ir *ir,
+											t_gram_production *production,
+											char **line);
 
-t_gram_production			*gramgen_production_create(char *nonterminal, t_gram_production_type type);
-t_gram_production			*gramgen_production_destroy(t_gram_production *production);
+uint8_t				gg_process_terminal(t_grammar_ir *ir,
+										t_gram_rule *rule,
+										t_gram_production *prod,
+										char **line);
+uint8_t				gg_process_nonterminal(	t_grammar_ir *ir,
+											t_gram_rule *rule,
+											char **line);
 
-t_gram_rule	*gramgen_rule_create(void);
-t_gram_rule	*gramgen_rule_destroy(t_gram_rule *def);
+t_gram_production	*gramgen_production_create(char *nonterminal, t_gram_production_type type);
+t_gram_production	*gramgen_production_destroy(t_gram_production *production);
 
-t_gram_token		*gramgen_token_create(t_gram_rule_type type, void *sig);
+t_gram_rule			*gramgen_rule_create(void);
+t_gram_rule			*gramgen_rule_destroy(t_gram_rule *rule);
+
+t_gram_token		*gramgen_token_create(	t_gram_rule_type type,
+											t_gram_production *production,
+											char *terminal);
 t_gram_token		*gramgen_token_destroy(t_gram_token *token);
 
-void				*gramgen_lex_lookup_add(t_list **tab, char *line, void *subject);
+void				*gramgen_lex_jtable_add(t_list **tab, t_gram_token *token);
 
 uint8_t				gramgen_post_process(t_grammar_ir *ir);
 

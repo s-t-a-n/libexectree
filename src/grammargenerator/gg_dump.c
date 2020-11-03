@@ -63,13 +63,9 @@ void	grammar_ir_dump(t_grammar_ir *ir)
 				token = vector(&def->tokens, V_PEEKAT, k, NULL);
 				assert(token);
 				if (token->type == TERMINAL)
-				{
-					printf("%s ", (char *)token->sig);
-				}
+					printf("%s ", token->terminal);
 				else
-				{
-					printf("[%s] ", (char *)((t_gram_production *)token->sig)->nonterminal);
-				}
+					printf("[%s] ", ((t_gram_production *)token->production)->nonterminal);
 				k++;
 			}
 			j++;

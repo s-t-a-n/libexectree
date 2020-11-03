@@ -20,12 +20,12 @@ static uint8_t	attempt_stitch(t_grammar_ir *ir, t_gram_token *token)
 {
 	t_gram_production *production;
 
-	production = grammar_ir_find_production(ir, (char *)token->sig);
+	production = grammar_ir_find_production(ir, (char *)token->terminal);
 	if (production)
 	{
-		token->type = NONTERMINAL;
-		free(token->sig);
-		token->sig = production;
+		free(token->terminal);
+		token->terminal = NULL;
+		token->production = production;
 		return (0);
 	}
 	else
@@ -46,7 +46,7 @@ uint8_t			gramgen_post_process(t_grammar_ir *ir)
 			{
 				logger(CRIT, 3, "grammar_generator",
 								"nonterminal has no rule",
-								(char *)((t_gram_token *)lst->subject)->sig);
+								(char *)((t_gram_token *)lst->subject)->terminal);
 				errors++;
 			}
 			lst = lst->next;

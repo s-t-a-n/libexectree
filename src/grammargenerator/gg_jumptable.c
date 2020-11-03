@@ -1,32 +1,18 @@
 
 #include "grammargenerator.h"
 
-void				*gramgen_lex_lookup_add(t_list **tab,
-											char *line,
-											void *subject)
+void				*gramgen_lex_jtable_add(t_list **tab, t_gram_token *token)
 {
 	size_t			index;
 
-	if (ft_isalnum(*line))
-		index = *line;
-	else if (ft_isalnum(*(line + 1)))
-		index = *(line + 1);
+#ifdef DEBUG
+	assert(token);
+	assert(token->terminal);
+#endif
+
+	if (token->terminal && ft_isascii(*token->terminal))
+		index = *token->terminal;
 	else
 		return (NULL);
-	return (index >= 0 && index < SYMBOL_SETSIZE ? lst_addback(&tab[index], subject) : NULL);
+	return (index >= 0 && index < SYMBOL_SETSIZE ? lst_addback(&tab[index], token) : NULL);
 }
-
-//void				*gramgen_parse_lookup_add(t_list *tab,
-//											size_t index,
-//											char *line,
-//											void *subject)
-//{
-//	unsigned int	c;
-//
-//	return (lst_addback(&tab[index], subject));
-//}
-
-//size_t				gramgen_parse_lookup_add(void *vec, )
-//{
-//
-//}

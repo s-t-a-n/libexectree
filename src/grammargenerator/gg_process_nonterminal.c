@@ -16,11 +16,6 @@
 #include "logger.h"
 #include "grammargenerator.h"
 
-/*
-** type is already checked before call to gg_process_nonterminal
-** this is highly unoptimized. how to do this in a better way ?
-*/
-
 static t_gram_rule_type get_type(char **line)
 {
 	t_gram_rule_type type;
@@ -42,55 +37,43 @@ static t_gram_rule_type get_type(char **line)
 	return (type);
 }
 
-static t_gram_token	*gen_token(t_grammar_ir *ir,
-								t_gram_production *production,
-								t_gram_rule_type type,
-								char *key)
+static t_gram_token	*create_token_for_key(	t_grammar_ir *ir,
+											t_gram_rule_type type,
+											char *key)
 {
 	t_gram_token				*token;
+	t_gram_production			*production;
 
-	if (ft_strcmp(production->nonterminal, key) == 0)
-		token = gramgen_token_create(type, production);
-	else if ((production = grammar_ir_find_production(ir, key)))
-		token = gramgen_token_create(type, production);
-	else if ((token = gramgen_token_create(type, ft_strdup(key))))
-		lst_addback(&ir->post, token);
+	production = grammar_ir_find_production(ir, key);
+	if (production)
+	{
+		token = gramgen_token_create(type, production, NULL);
+	}
 	else
-		token = NULL;
+	{
+		token = gramgen_token_create(type, NULL, ft_strdup(key));
+		if (token && !lst_addback(&ir->post, token))
+			return(gramgen_token_destroy(token));
+	}
 	return (token);
 }
 
+static uint8_t		push_token(t_gram_rule *rule, t_gram_token *token)
+{
+	if (vector(&rule->tokens, V_PUSHBACK, 0, token))
+	{
+		logger(INFO, 3, "grammar_generator", "adding nonterminal to rule");
+		return (0);
+	}
+	return (1);
+}
 
-// this function is bullshit now
-//static uint8_t		add_token_for_key(	t_gram_production *production,
-//										t_gram_rule *def,
-//										t_grammar_ir *ir,
-//										char *key)
-//{
-//	t_gram_token	*token;
-//
-//	token = gen_token(ir, production, key);
-//	if (token)
-//	{
-//		if (vector(&def->tokens, V_PUSHBACK, 0, token))
-//		{
-//			logger(INFO, production ? 3 : 4,
-//						"grammar_generator",
-//						"adding nonterminal to rule",
-//						key, production ? "" : "adding to Post!");
-//			return (0);
-//		}
-//	}
-//	gramgen_token_destroy(token);
-//	return (1);
-//}
-
-uint8_t				gg_process_nonterminal(t_gram_production *production,
-											t_gram_rule *def,
-											t_grammar_ir *ir,
+uint8_t				gg_process_nonterminal(	t_grammar_ir *ir,
+											t_gram_rule *rule,
 											char **line)
 {
 	t_gram_rule_type		type;
+	t_gram_token			*token;
 	char					*key;
 	char					closechar;
 	char					*excrement;
@@ -98,45 +81,23 @@ uint8_t				gg_process_nonterminal(t_gram_production *production,
 	closechar = **line + 2;
 	type = get_type(line);
 	key = ft_strtok(*line, PRODUCTION_DELIMSET);
+	token = NULL;
 	while (key)
 	{
 		if ((excrement = ft_strchr(key, closechar)))
 			*excrement = '\0';
+#ifdef DEBUG
 		printf("multi-key is : |%s|\n", key);
-		// push key here
+#endif
+		token = create_token_for_key(ir, type, key);
+		free(key);
 		key = ft_strtok(NULL, PRODUCTION_DELIMSET);
 	}
-
-	//// loop this using ft_strtok, and add multiple keys to token
-	//if (ft_strcsetlen(*line, PRODUCTION_DELIMSET) < ft_strcsetlen(*line, PRODUCTION_CLOSESET))
-	//{
-	//	// multi key
-	//	key = ft_strtok(*line, PRODUCTION_DELIMSET);
-	//	while (key)
-	//	{
-	//		if ((excrement = ft_strchr(key, delim)))
-	//			*excrement = '\0';
-	//		printf("multi-key is : |%s|\n", key);
-
-	//		// call to gen_token_multi with static var like strtok
-	//		key = ft_strtok(NULL, PRODUCTION_DELIMSET);
-	//	}
-	//}
-	//else
-	//{
-	//	// single key
-	//	key = ft_strtok(*line, PRODUCTION_DELIMSET);
-	//	if ((excrement = ft_strchr(key, delim)))
-	//		*excrement = '\0';
-	//	printf("single-key is : |%s|\n", key);
-	//}
-
-	// pivot this to single push of token -> make gen_token_for_key(or keys with array)
-	//if (add_token_for_key(production, def, ir, key) == 0)
-	//{
-	//	free(key);
-	//	return (0);
-	//}
-	free(key);
+	if (type & MULTI_RULETYPES)
+		gramgen_token_create(type, NULL, NULL);
+	*line += ft_strcsetlen(*line, PRODUCTION_CLOSESET);
+	if (token && push_token(rule, token) == 0)
+		return (0);
+	gramgen_token_destroy(token);
 	return (1);
 }

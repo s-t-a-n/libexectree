@@ -18,30 +18,28 @@
 typedef void				t_vector;
 typedef enum				s_gram_rule_type
 {
-	NONTERMINAL = 1,
-	NONTERMINAL_MULT = 2,
-	UNBOUND_NONTERMINAL = 4,
-	UNBOUND_NONTERMINAL_MULT = 8,
-	RECURSIVE_NONTERMINAL = 16,
-	TERMINAL = 32,
-	UNKNOWN = 64
+	NONTERMINAL				= 1<<0,
+	NONTERMINAL_MULT		= 1<<1,
+	UNBOUND_NONTERMINAL		= 1<<2,
+	UNBOUND_NONTERMINAL_MULT= 1<<3,
+	RECURSIVE_NONTERMINAL	= 1<<4,
+	TERMINAL				= 1<<5,
+	UNKNOWN					= 1<<6
 }							t_gram_rule_type;
 
-/*
-** sig can be a non-terminal referring to a rule (gram_production)
-** or be a terminal referring to a char (char-string)
-*/
+# define MULTI_RULETYPES	(NONTERMINAL_MULT|UNBOUND_NONTERMINAL_MULT)
 
+typedef struct				s_gram_production t_gram_production;
 typedef struct				s_gram_token
 {
 	t_gram_rule_type		type;
-	// jtable
-	void					*sig;
+	void					*production; // vector in case of multi rule type
+	char					*terminal;
 }							t_gram_token;
 
 typedef struct				s_gram_rule
 {
-	t_vector				*tokens; // vec
+	t_vector				*tokens;
 }							t_gram_rule;
 
 typedef enum				s_gram_production_type
@@ -52,29 +50,26 @@ typedef enum				s_gram_production_type
 
 typedef struct				s_gram_production
 {
-	t_gram_production_type		type;
+	t_gram_production_type	type;
 	char					*nonterminal;
-	t_vector					*rules;
+	t_vector				*rules;
+	t_vector				*references; // references from other productions
 }							t_gram_production;
 
-/*
-** jtable contains productions where first letter of terminal matches as index
-*/
 typedef struct				s_grammar_ir
 {
 	t_vector				*productions;
 	t_list					*post;
-	t_list					*lex_lookup[SYMBOL_SETSIZE];
-	t_vector				*parse_lookup; // vec
+	t_list					*lex_jtable[SYMBOL_SETSIZE]; // add for every terminal an entry based on the first letter
 	unsigned int			size;
 }							t_grammar_ir;
-
 
 t_grammar_ir				*grammar_ir_generate(const char *bnf_fpath);
 
 void						grammar_ir_dump(t_grammar_ir *ir);
 t_grammar_ir				*grammar_ir_destroy(t_grammar_ir *ir);
 
-t_gram_production					*grammar_ir_find_production(t_grammar_ir *ir, char *key);
+t_gram_production			*grammar_ir_find_production(t_grammar_ir *ir,
+														char *key);
 
 #endif

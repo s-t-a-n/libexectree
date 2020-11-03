@@ -21,31 +21,25 @@ uint8_t					gramgen_process_rules(t_grammar_ir *ir,
 											char **line)
 {
 	uint8_t				errors;
-	t_gram_rule	*def;
+	t_gram_rule	*rule;
 
-	*line = ft_strscan(*line);
 	errors = 0;
 	if (ft_isinset(**line, "|="))
 	{
-		def = gramgen_rule_create();
-		if (def)
+		rule = gramgen_rule_create();
+		if (rule)
 		{
 			(*line)++;
-			*line = ft_strscan(*line);
 			while (**line)
 			{
-//				if (!add_to_jtable(ir, production, *line))
-//					logger(CRIT, 2, "grammar_generator", "add to jump table failed!");
-				if (ft_isinset(**line, "'\""))
-					errors += gg_process_literal(def, line);
-				else if (ft_isinset(**line, PRODUCTION_OPENSET))
-					errors += gg_process_nonterminal(production, def, ir, line);
-				else if (ft_isalnum(**line) || **line == '_')
-					errors += gg_process_word(def, line);
 				*line = ft_strscan(*line);
+				if (ft_isinset(**line, "'\"") || ft_isalnum(**line) || **line == '_')
+					errors += gg_process_terminal(ir, rule, production, line);
+				else if (ft_isinset(**line, PRODUCTION_OPENSET))
+					errors += gg_process_nonterminal(ir, rule, line);
 			}
-			if (!vector(&production->rules, V_PUSHBACK, 0, def))
-				gramgen_rule_destroy(def);
+			if (!vector(&production->rules, V_PUSHBACK, 0, rule))
+				gramgen_rule_destroy(rule);
 		}
 	}
 	else
