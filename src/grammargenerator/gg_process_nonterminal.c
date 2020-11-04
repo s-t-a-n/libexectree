@@ -60,9 +60,15 @@ static t_gram_token	*create_token_for_key(	t_grammar_ir *ir,
 
 static uint8_t		push_token(t_gram_rule *rule, t_gram_token *token)
 {
+	char *key;
+
+	key = token->production ? ((t_gram_production *)token->production)->nonterminal : NULL;
 	if (vector(&rule->tokens, V_PUSHBACK, 0, token))
 	{
-		logger(INFO, 3, "grammar_generator", "adding nonterminal to rule");
+		logger(INFO, key ? 3 : 2,
+					"grammar_generator",
+					"adding nonterminal to rule",
+					key);
 		return (0);
 	}
 	return (1);
@@ -86,9 +92,6 @@ uint8_t				gg_process_nonterminal(	t_grammar_ir *ir,
 	{
 		if ((excrement = ft_strchr(key, closechar)))
 			*excrement = '\0';
-#ifdef DEBUG
-		printf("multi-key is : |%s|\n", key);
-#endif
 		token = create_token_for_key(ir, type, key);
 		free(key);
 		key = ft_strtok(NULL, PRODUCTION_DELIMSET);
@@ -96,6 +99,7 @@ uint8_t				gg_process_nonterminal(	t_grammar_ir *ir,
 	if (type & MULTI_RULETYPES)
 		gramgen_token_create(type, NULL, NULL);
 	*line += ft_strcsetlen(*line, PRODUCTION_CLOSESET);
+	*line += **line ? 1 : 0;
 	if (token && push_token(rule, token) == 0)
 		return (0);
 	gramgen_token_destroy(token);

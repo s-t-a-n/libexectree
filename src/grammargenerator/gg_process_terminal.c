@@ -40,8 +40,8 @@ uint8_t				gg_process_terminal(t_grammar_ir *ir,
 	size_t			keylen;
 
 	closechar = **line;
-	(*line)++;
 	keylen = ft_strstringlen(*line);
+	(*line)++;
 	key = ft_strsub(*line, 0, keylen);
 	if (key)
 	{
@@ -51,7 +51,6 @@ uint8_t				gg_process_terminal(t_grammar_ir *ir,
 			(*line) += keylen + (*(*line + keylen) ? 1 : 0);
 			return (0);
 		}
-		free(key);
 		gramgen_token_destroy(token);
 	}
 	return (1);

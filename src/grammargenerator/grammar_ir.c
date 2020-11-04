@@ -24,8 +24,9 @@ static uint8_t		parse_line(t_grammar_ir *ir, char *line)
 {
 	static t_gram_production *production;
 
-	if (!*ft_strscan(line) || *ft_strscan(line) == '#')
-		return (0);
+	line = ft_strscan(line);
+	if (!*line || ft_isinset(*line, "#"))
+		return 0;
 	if (ft_isinset(*line, PRODUCTION_OPENSET))
 	{
 		line++;
