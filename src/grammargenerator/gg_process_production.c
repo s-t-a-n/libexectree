@@ -29,7 +29,7 @@ static t_gram_production		*new_production(t_grammar_ir *ir,
 		if (vector(&ir->productions, V_PUSHBACK, 0, production))
 		{
 			logger(INFO, 3, "grammar_generator",
-							"Pushing non-terminal",
+							"Pushing new non-terminal",
 							production->nonterminal);
 			*line += ft_strclen(*line, '=');
 			ir->size++;

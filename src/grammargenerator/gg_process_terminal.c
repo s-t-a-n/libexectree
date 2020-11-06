@@ -22,7 +22,7 @@ static uint8_t		push_token(	t_gram_rule *rule,
 	if (token && vector(&rule->tokens, V_PUSHBACK, 0, token))
 	{
 		logger(INFO, 3, "grammar_generator",
-						"adding (terminal) terminal to rule",
+						"adding terminal to rule",
 						token->terminal);
 		return (0);
 	}
@@ -40,15 +40,19 @@ uint8_t				gg_process_terminal(t_grammar_ir *ir,
 	size_t			keylen;
 
 	closechar = **line;
+	printf("line @ |%s|\n", *line);
 	keylen = ft_strstringlen(*line);
-	(*line)++;
-	key = ft_strsub(*line, 0, keylen);
+#ifdef DEBUG
+	assert(keylen > 0);
+#endif
+	key = ft_strstring(*line);
+	printf("key : |%s|\n", key);
 	if (key)
 	{
 		token = gramgen_token_create(TERMINAL, prod, key);
 		if (push_token(rule, token) == 0 && gramgen_lex_jtable_add(ir->lex_jtable, token))
 		{
-			(*line) += keylen + (*(*line + keylen) ? 1 : 0);
+			(*line) += keylen + 2;
 			return (0);
 		}
 		gramgen_token_destroy(token);
