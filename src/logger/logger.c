@@ -32,9 +32,10 @@ void	logger(	t_error errl,
 				unsigned int argc,
 				...)
 {
-	va_list	args;
-	unsigned int i;
-	char	buffer[LOG_BUF_SIZE];
+	va_list			args;
+	char			*str;
+	unsigned int	i;
+	char			buffer[LOG_BUF_SIZE];
 	
 	va_start(args, argc);
 	buffer[0] = '\0';
@@ -44,7 +45,10 @@ void	logger(	t_error errl,
 	i = 1;
 	while(i < argc)
 	{
-			ft_strlcat(buffer, va_arg(args, char *), LOG_BUF_SIZE);
+			str = va_arg(args, char *);
+			if (!str)
+				str = "NULL";
+			ft_strlcat(buffer, str, LOG_BUF_SIZE);
 			if (i < argc - 1)
 				ft_strlcat(buffer, " : ", LOG_BUF_SIZE);
 			i++;
