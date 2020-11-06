@@ -27,6 +27,7 @@ static t_gram_token		*gramgen_token_create_multi(t_gram_rule_type type,
 	}
 	if (token || (token = ft_calloc(sizeof(t_gram_token), 1)))
 	{
+		token->type = type;
 		if (!token->production && !vector(&token->production, V_CREATE, VEC_DEF_SIZE, NULL))
 			return (NULL);
 		if ((subtoken = gramgen_token_create(type/2, production, key)))
