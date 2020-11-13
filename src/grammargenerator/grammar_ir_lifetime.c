@@ -45,8 +45,8 @@ t_grammar_ir		*grammar_ir_destroy(t_grammar_ir *ir)
 		}
 		i = 0;
 		while (i < SYMBOL_SETSIZE)
-			lst_destroy(&ir->lex_jtable[i++], false);
-		vector(&ir->productions, V_DESTROY, false, NULL);
+			lst_destroy(&ir->lex_jtable[i++], FALSE);
+		vector(&ir->productions, V_DESTROY, FALSE, NULL);
 	}
 	free(ir);
 	return (NULL);

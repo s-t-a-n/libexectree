@@ -43,7 +43,7 @@ t_node		*node_destroy(t_node *node)
 			node_destroy(vector(&node->children, V_PEEKBACK, 0, NULL));
 			vector(&node->children, V_POPBACK, 0, NULL);
 		}
-		vector(&node->children, V_DESTROY, false, NULL);
+		vector(&node->children, V_DESTROY, FALSE, NULL);
 		free(node->children);
 	}
 	free(node);

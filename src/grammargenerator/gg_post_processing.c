@@ -20,6 +20,7 @@ static uint8_t	attempt_stitch(t_grammar_ir *ir, t_gram_token *token)
 {
 	t_gram_production *production;
 
+	assert(token->terminal);
 	production = grammar_ir_find_production(ir, (char *)token->terminal);
 	if (production)
 	{
@@ -54,6 +55,6 @@ uint8_t			gramgen_post_process(t_grammar_ir *ir)
 	}
 	else
 		return (0);
-	lst_destroy(&ir->post, false);
+	lst_destroy(&ir->post, FALSE);
 	return (errors);
 }

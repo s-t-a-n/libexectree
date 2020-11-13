@@ -40,13 +40,12 @@ uint8_t				gg_process_terminal(t_grammar_ir *ir,
 	size_t			keylen;
 
 	closechar = **line;
-	printf("line @ |%s|\n", *line);
+	printf("line @ process_terminal :  |%s|\n", *line);
 	keylen = ft_strstringlen(*line);
 #ifdef DEBUG
 	assert(keylen > 0);
 #endif
 	key = ft_strstring(*line);
-	printf("key : |%s|\n", key);
 	if (key)
 	{
 		token = gramgen_token_create(TERMINAL, prod, key);

@@ -73,7 +73,7 @@ t_gram_token		*gramgen_token_destroy(t_gram_token *token)
 				gramgen_token_destroy(vector(&token->production, V_PEEKBACK, 0, NULL));
 				vector(&token->production, V_POPBACK, 0, NULL);
 			}
-			vector(&token->production, V_DESTROY, false, NULL);
+			vector(&token->production, V_DESTROY, FALSE, NULL);
 		}
 		free(token->terminal);
 	}

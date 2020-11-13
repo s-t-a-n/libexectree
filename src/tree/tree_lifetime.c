@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
 #include <stdlib.h>
+#include "libft.h"
 #include "vector.h"
 #include "tree.h"
 
@@ -31,7 +31,7 @@ t_node		*tree_destroy(t_node *root)
 			tree_destroy(vector(&root->children, V_PEEKBACK, 0, NULL));
 			vector(&root->children, V_POPBACK, 0, NULL);
 		}
-		vector(&root->children, V_DESTROY, false, NULL);
+		vector(&root->children, V_DESTROY, FALSE, NULL);
 		node_destroy(root);
 	}
 	return (NULL);

@@ -62,7 +62,8 @@ static uint8_t		push_token(t_gram_rule *rule, t_gram_token *token)
 {
 	char *key;
 
-	key = token->production ? ((t_gram_production *)token->production)->nonterminal : NULL;
+	key = "NONFUNCT";
+	//key = token->type & MULTI_RULETYPES ? "MULTI" : ((t_gram_production *)token->production)->nonterminal;
 	if (vector(&rule->tokens, V_PUSHBACK, 0, token))
 	{
 		logger(INFO, key ? 3 : 2,
@@ -84,6 +85,7 @@ uint8_t				gg_process_nonterminal(	t_grammar_ir *ir,
 	char					closechar;
 	char					*excrement;
 
+	printf("line @ process_nonterminal :  |%s|\n", *line);
 	closechar = **line + 2;
 	type = get_type(line);
 	key = ft_strtok(*line, PRODUCTION_DELIMSET);

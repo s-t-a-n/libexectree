@@ -42,7 +42,7 @@ t_gram_production	*gramgen_production_destroy(t_gram_production *production)
 																		NULL));
 			vector(&production->rules, V_POPBACK, 0, NULL);
 		}
-		vector(&production->rules, V_DESTROY, false, NULL);
+		vector(&production->rules, V_DESTROY, FALSE, NULL);
 		free(production->nonterminal);
 	}
 	free(production);

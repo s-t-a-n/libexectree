@@ -24,6 +24,9 @@ t_gram_production			*grammar_ir_find_production(t_grammar_ir *ir, char *key)
 	while (i > 0)
 	{
 		production = vector(&ir->productions, V_PEEKAT, i - 1, NULL);
+		assert(production);
+		assert(production->nonterminal);
+		assert(key);
 		if (ft_strcmp(production->nonterminal, key) == 0)
 			return (production);
 		i--;
